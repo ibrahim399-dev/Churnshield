@@ -1,0 +1,32 @@
+import streamlit as st
+import joblib
+import numpy as np
+
+# Load the model
+model = joblib.load("churn_model.pkl")
+
+# Website title
+st.title("🛡️ ChurnShield")
+st.subheader("Customer Churn Prediction App")
+st.write("Enter customer details below to predict if they will churn!")
+
+# Input fields
+tenure = st.number_input("Tenure (months)", 0, 72, 12)
+monthly_charges = st.number_input("Monthly Charges ($)", 0.0, 200.0, 50.0)
+total_charges = st.number_input("Total Charges ($)", 0.0, 10000.0, 500.0)
+senior_citizen = st.selectbox("Senior Citizen?", [0, 1])
+contract = st.selectbox("Contract Type", [0, 1, 2])
+internet_service = st.selectbox("Internet Service", [0, 1, 2])
+payment_method = st.selectbox("Payment Method", [0, 1, 2, 3])
+
+# Predict button
+if st.button("🔍 Predict Churn"):
+    features = np.array([[tenure, monthly_charges, total_charges,
+                         senior_citizen, contract, 
+                         internet_service, payment_method]])
+    prediction = model.predict(features)
+    
+    if prediction[0] == 1:
+        st.error("⚠️ HIGH RISK - This customer is likely to churn!")
+    else:
+        st.success("✅ LOW RISK - This customer is likely to stay!")
