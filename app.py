@@ -1,71 +1,71 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from sklearn.ensemble import GradientBoostingClassifier
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder
 
-# Train model automatically
-@st.cache_resource
-def load_model():
-    url = "https://raw.githubusercontent.com/IBM/telco-customer-churn-on-icp4d/master/data/Telco-Customer-Churn.csv"
-    df = pd.read_csv(url)
+# Simple rule-based predictor (no sklearn needed!)
+def predict_churn(tenure, monthly_charges, total_charges, 
+                  senior_citizen, contract, internet_service, payment_method):
     
-    df["Churn"] = df["Churn"].map({"Yes": 1, "No": 0})
-    df["TotalCharges"] = pd.to_numeric(df["TotalCharges"], errors="coerce")
-    df = df.dropna()
+    risk_score = 0
     
-    le = LabelEncoder()
-    df["Contract_encoded"] = le.fit_transform(df["Contract"])
-    df["InternetService_encoded"] = le.fit_transform(df["InternetService"])
-    df["PaymentMethod_encoded"] = le.fit_transform(df["PaymentMethod"])
+    # Contract type
+    if contract == "Month-to-month":
+        risk_score += 40
+    elif contract == "One year":
+        risk_score += 10
     
-    features = ["tenure", "MonthlyCharges", "TotalCharges",
-                "SeniorCitizen", "Contract_encoded",
-                "InternetService_encoded", "PaymentMethod_encoded"]
+    # Monthly charges
+    if monthly_charges > 70:
+        risk_score += 25
+    elif monthly_charges > 50:
+        risk_score += 10
     
-    X = df[features]
-    y = df["Churn"]
+    # Tenure
+    if tenure < 12:
+        risk_score += 20
+    elif tenure < 24:
+        risk_score += 10
     
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42)
+    # Senior citizen
+    if senior_citizen == "Yes":
+        risk_score += 10
     
-    model = GradientBoostingClassifier(n_estimators=200, random_state=42)
-    model.fit(X_train, y_train)
-    return model
-
-# Load model
-model = load_model()
+    # Internet service
+    if internet_service == "Fiber optic":
+        risk_score += 5
+    
+    return risk_score
 
 # Website
 st.title("🛡️ ChurnShield")
 st.subheader("Customer Churn Prediction App")
-st.write("Enter customer details to predict if they will churn!")
+st.write("Built by Ajayi Ibrahim Ademola — Data Science & ML, AAUA")
+st.write("---")
 
 # Inputs
-tenure = st.slider("Tenure (months)", 0, 72, 12)
-monthly_charges = st.number_input("Monthly Charges ($)", 0.0, 200.0, 50.0)
-total_charges = st.number_input("Total Charges ($)", 0.0, 10000.0, 500.0)
-senior_citizen = st.selectbox("Senior Citizen?", ["No", "Yes"])
-contract = st.selectbox("Contract Type", ["Month-to-month", "One year", "Two year"])
-internet_service = st.selectbox("Internet Service", ["DSL", "Fiber optic", "No"])
-payment_method = st.selectbox("Payment Method", ["Bank transfer", "Credit card", "Electronic check", "Mailed check"])
+tenure = st.slider("📅 Tenure (months)", 0, 72, 12)
+monthly_charges = st.number_input("💰 Monthly Charges ($)", 0.0, 200.0, 50.0)
+total_charges = st.number_input("💳 Total Charges ($)", 0.0, 10000.0, 500.0)
+senior_citizen = st.selectbox("👤 Senior Citizen?", ["No", "Yes"])
+contract = st.selectbox("📋 Contract Type", ["Month-to-month", "One year", "Two year"])
+internet_service = st.selectbox("🌐 Internet Service", ["DSL", "Fiber optic", "No"])
+payment_method = st.selectbox("💳 Payment Method", ["Bank transfer", "Credit card", "Electronic check", "Mailed check"])
 
-# Convert inputs
-senior_citizen = 1 if senior_citizen == "Yes" else 0
-contract = ["Month-to-month", "One year", "Two year"].index(contract)
-internet_service = ["DSL", "Fiber optic", "No"].index(internet_service)
-payment_method = ["Bank transfer", "Credit card", "Electronic check", "Mailed check"].index(payment_method)
-
-# Predict
+# Predict button
 if st.button("🔍 Predict Churn"):
-    features = np.array([[tenure, monthly_charges, total_charges,
-                         senior_citizen, contract,
-                         internet_service, payment_method]])
-    prediction = model.predict(features)
-    probability = model.predict_proba(features)[0][1] * 100
+    score = predict_churn(tenure, monthly_charges, total_charges,
+                         senior_citizen, contract, 
+                         internet_service, payment_method)
     
-    if prediction[0] == 1:
-        st.error(f"⚠️ HIGH RISK - {probability:.1f}% chance of churning!")
+    st.write("---")
+    st.write(f"**Risk Score: {score}/100**")
+    st.progress(score/100)
+    
+    if score >= 60:
+        st.error("⚠️ VERY HIGH RISK - This customer is very likely to churn!")
+    elif score >= 40:
+        st.warning("🟡 HIGH RISK - This customer may churn soon!")
+    elif score >= 20:
+        st.info("🔵 MEDIUM RISK - Monitor this customer!")
     else:
-        st.success(f"✅ LOW RISK - Only {probability:.1f}% chance of churning!")
+        st.success("✅ LOW RISK - This customer is likely to stay!")
