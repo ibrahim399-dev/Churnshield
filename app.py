@@ -70,14 +70,23 @@ def show_result(score, reasons):
 
 # Page config
 st.set_page_config(
-    page_title="ChurnShield",
+    page_title="ChurnShield-NG",
     page_icon="🛡️",
     layout="centered"
 )
 
-# Header
+# HERO SECTION
 st.title("🛡️ ChurnShield-NG")
-st.write("Built by **Ajayi Ibrahim Ademola** — Data Science & ML")
+st.subheader("AI-Powered Customer Churn Prediction")
+st.write("Helping Nigerian businesses retain customers and grow revenue!")
+st.write("---")
+
+# Stats bar
+col1, col2, col3, col4 = st.columns(4)
+col1.metric("📊 Dataset", "7,043 customers")
+col2.metric("🎯 Accuracy", "78.68%")
+col3.metric("📱 Providers", "4 Nigerian")
+col4.metric("🌍 Countries", "Growing!")
 st.write("---")
 
 # MODE SELECTOR
@@ -118,8 +127,9 @@ if mode == "🏢 Business Owner — Single Prediction":
     col5.metric("Contract", contract.split()[0])
 
     if st.button("🔍 Predict Customer Churn Risk", use_container_width=True):
-        score, reasons = predict_churn(tenure, monthly_charges/1000,
-                                      senior_citizen, contract, internet_service)
+        with st.spinner("Analyzing customer data..."):
+            score, reasons = predict_churn(tenure, monthly_charges/1000,
+                                          senior_citizen, contract, internet_service)
         recommendation, _ = show_result(score, reasons)
         st.write("---")
         st.subheader("💡 Recommended Business Action")
@@ -132,7 +142,6 @@ elif mode == "📊 Business Analytics — Batch Prediction":
     st.write("---")
     st.info("📥 Your CSV must have these columns: **tenure, monthly_charges, senior_citizen, contract, internet_service**")
 
-    # Session state for batch data
     if "batch_df" not in st.session_state:
         st.session_state.batch_df = None
 
@@ -158,39 +167,46 @@ elif mode == "📊 Business Analytics — Batch Prediction":
         st.dataframe(df)
 
         if st.button("🔍 Predict Churn for All Customers", use_container_width=True):
-            results = []
-            for idx, row in df.iterrows():
-                score, _ = predict_churn(
-                    row["tenure"],
-                    row["monthly_charges"],
-                    str(row["senior_citizen"]),
-                    row["contract"],
-                    row["internet_service"]
-                )
-                if score >= 60:
-                    risk = "VERY HIGH RISK"
-                elif score >= 40:
-                    risk = "HIGH RISK"
-                elif score >= 20:
-                    risk = "MEDIUM RISK"
-                else:
-                    risk = "LOW RISK"
+            with st.spinner("Analyzing all customers..."):
+                results = []
+                for idx, row in df.iterrows():
+                    score, _ = predict_churn(
+                        row["tenure"],
+                        row["monthly_charges"],
+                        str(row["senior_citizen"]),
+                        row["contract"],
+                        row["internet_service"]
+                    )
+                    if score >= 60:
+                        risk = "VERY HIGH RISK"
+                    elif score >= 40:
+                        risk = "HIGH RISK"
+                    elif score >= 20:
+                        risk = "MEDIUM RISK"
+                    else:
+                        risk = "LOW RISK"
 
-                results.append({
-                    "Customer": idx + 1,
-                    "Risk Score": score,
-                    "Risk Level": risk
-                })
+                    results.append({
+                        "Customer": idx + 1,
+                        "Risk Score": score,
+                        "Risk Level": risk
+                    })
 
             results_df = pd.DataFrame(results)
 
             st.write("---")
             st.subheader("📈 Batch Results Summary")
             col1, col2, col3, col4 = st.columns(4)
-            col1.metric("Total Customers", len(results_df))
-            col2.metric("Very High Risk", len(results_df[results_df["Risk Level"] == "VERY HIGH RISK"]))
-            col3.metric("High Risk", len(results_df[results_df["Risk Level"] == "HIGH RISK"]))
-            col4.metric("Low Risk", len(results_df[results_df["Risk Level"] == "LOW RISK"]))
+            col1.metric("Total", len(results_df))
+            col2.metric("🔴 Very High", len(results_df[results_df["Risk Level"] == "VERY HIGH RISK"]))
+            col3.metric("🟡 High", len(results_df[results_df["Risk Level"] == "HIGH RISK"]))
+            col4.metric("✅ Low", len(results_df[results_df["Risk Level"] == "LOW RISK"]))
+
+            # Chart
+            st.write("---")
+            st.subheader("📊 Risk Distribution Chart")
+            chart_data = results_df["Risk Level"].value_counts()
+            st.bar_chart(chart_data)
 
             st.write("---")
             st.subheader("📋 Full Results")
@@ -209,13 +225,51 @@ elif mode == "👤 Customer — Check if I will leave my provider":
     st.subheader("👤 Customer Mode")
     st.write("Answer honestly and we'll tell you if you're likely to leave your provider!")
 
+    # Country selector
+    country = st.selectbox("🌍 Select your Country", [
+        "🇳🇬 Nigeria",
+        "🇬🇭 Ghana",
+        "🇰🇪 Kenya",
+        "🇿🇦 South Africa",
+        "🇺🇬 Uganda",
+        "🇹🇿 Tanzania",
+        "🇷🇼 Rwanda",
+        "🌍 Other African Country"
+    ])
+
+    # Providers by country
+    providers = {
+        "🇳🇬 Nigeria": ["MTN", "Airtel", "Glo", "9mobile"],
+        "🇬🇭 Ghana": ["MTN", "Vodafone", "AirtelTigo", "Glo"],
+        "🇰🇪 Kenya": ["Safaricom", "Airtel", "Telkom"],
+        "🇿🇦 South Africa": ["Vodacom", "MTN", "Cell C", "Telkom"],
+        "🇺🇬 Uganda": ["MTN", "Airtel", "Africell"],
+        "🇹🇿 Tanzania": ["Vodacom", "Airtel", "Tigo", "Halotel"],
+        "🇷🇼 Rwanda": ["MTN", "Airtel"],
+        "🌍 Other African Country": ["MTN", "Airtel", "Vodafone", "Other"]
+    }
+
     provider = st.selectbox("📱 Your Current Provider",
-                            ["MTN", "Airtel", "Glo", "9mobile"])
+                            providers[country])
+
+    # Currency by country
+    currencies = {
+        "🇳🇬 Nigeria": "₦",
+        "🇬🇭 Ghana": "GH₵",
+        "🇰🇪 Kenya": "KSh",
+        "🇿🇦 South Africa": "R",
+        "🇺🇬 Uganda": "USh",
+        "🇹🇿 Tanzania": "TSh",
+        "🇷🇼 Rwanda": "RWF",
+        "🌍 Other African Country": "$"
+    }
+
+    currency = currencies[country]
 
     col1, col2 = st.columns(2)
     with col1:
         tenure = st.slider("📅 How long have you been with them? (months)", 0, 72, 12)
-        monthly_charges = st.number_input("💰 How much do you pay monthly? (₦)", 0.0, 200000.0, 5000.0)
+        monthly_charges = st.number_input(f"💰 How much do you pay monthly? ({currency})", 0.0, 200000.0, 5000.0)
         senior_citizen = st.selectbox("👤 Are you a senior citizen?", ["No", "Yes"])
     with col2:
         contract = st.selectbox("📋 Your Plan Type", ["Month-to-month", "One year", "Two year"])
@@ -232,8 +286,9 @@ elif mode == "👤 Customer — Check if I will leave my provider":
     }
 
     if st.button("🔍 Check My Loyalty Score", use_container_width=True):
-        score, reasons = predict_churn(tenure, monthly_charges/1000,
-                                      senior_citizen, contract, internet_service)
+        with st.spinner("Analyzing your loyalty score..."):
+            score, reasons = predict_churn(tenure, monthly_charges/1000,
+                                          senior_citizen, contract, internet_service)
         score = min(100, score + satisfaction_scores[satisfaction])
         if satisfaction in ["Unsatisfied", "Very unsatisfied"]:
             reasons.append(f"😞 You are {satisfaction.lower()} with your provider!")
@@ -245,3 +300,19 @@ elif mode == "👤 Customer — Check if I will leave my provider":
         if score >= 40:
             st.write("---")
             st.info(f"💡 **Pro tip:** Call {provider} customer care and negotiate a better plan!")
+
+# CONTACT SECTION
+st.write("---")
+st.subheader("📬 Contact & About")
+col1, col2 = st.columns(2)
+with col1:
+    st.write("**👨‍💻 Built by:**")
+    st.write("Ajayi Ibrahim Ademola")
+    st.write("Data Science & ML Developer")
+with col2:
+    st.write("**📧 Get in touch:**")
+    st.write("ibrahimdamola405@gmail.com")
+    st.write("💼 Open to partnerships & collaborations!")
+
+st.write("---")
+st.caption("© 2026 ChurnShield-NG | AI-Powered Churn Prediction | All Rights Reserved")
