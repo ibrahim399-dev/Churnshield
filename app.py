@@ -45,7 +45,7 @@ def show_result(score, reasons):
     if score >= 60:
         st.error(f"⚠️ VERY HIGH RISK — {score}% chance of churning!")
         recommendation = "🚨 Offer special discount or upgrade immediately!"
-        customer_advice = "⚠️ You are very likely to leave! Consider negotiating a better plan or switching!"
+        customer_advice = "⚠️ You are very likely to leave! Consider negotiating a better plan!"
     elif score >= 40:
         st.warning(f"🟡 HIGH RISK — {score}% chance of churning!")
         recommendation = "📞 Call customer and offer loyalty rewards!"
@@ -53,7 +53,7 @@ def show_result(score, reasons):
     elif score >= 20:
         st.info(f"🔵 MEDIUM RISK — {score}% chance of churning!")
         recommendation = "👀 Send satisfaction survey to this customer!"
-        customer_advice = "🔵 You're somewhat satisfied but could be happier. Explore your options!"
+        customer_advice = "🔵 You're somewhat satisfied but could be happier!"
     else:
         st.success(f"✅ LOW RISK — Only {score}% chance of churning!")
         recommendation = "😊 Customer is happy and loyal — no action needed!"
@@ -75,10 +75,12 @@ st.set_page_config(
 
 # Header
 st.title("🛡️ ChurnShield-NG")
-st.write("Built by **Ajayi Ibrahim Ademola** — Data Science & ML, AAUA")
+st.write("Built by **Ajayi Ibrahim** — Data Science & ML")
 st.write("---")
 
-# MODE= st.selectbox("Select your mode", [
+# MODE SELECTOR
+st.subheader("👇 Who are you?")
+mode = st.selectbox("Select your mode", [
     "👇 Please select...",
     "🏢 Business Owner — Predict if my customer will churn",
     "👤 Customer — Check if I will leave my provider"
@@ -114,7 +116,7 @@ if mode == "🏢 Business Owner — Predict if my customer will churn":
 
     if st.button("🔍 Predict Customer Churn Risk", use_container_width=True):
         score, reasons = predict_churn(tenure, monthly_charges/1000,
-                                       senior_citizen, contract, internet_service)
+                                      senior_citizen, contract, internet_service)
         recommendation, _ = show_result(score, reasons)
         st.write("---")
         st.subheader("💡 Recommended Business Action")
@@ -125,9 +127,9 @@ else:
     st.subheader("👤 Customer Mode")
     st.write("Answer honestly and we'll tell you if you're likely to leave your provider!")
 
-    provider = st.selectbox("📱 Your Current Provider", 
-                           ["MTN", "Airtel", "Glo", "9mobile"])
-    
+    provider = st.selectbox("📱 Your Current Provider",
+                            ["MTN", "Airtel", "Glo", "9mobile"])
+
     col1, col2 = st.columns(2)
     with col1:
         tenure = st.slider("📅 How long have you been with them? (months)", 0, 72, 12)
@@ -136,10 +138,9 @@ else:
     with col2:
         contract = st.selectbox("📋 Your Plan Type", ["Month-to-month", "One year", "Two year"])
         internet_service = st.selectbox("🌐 Your Internet Type", ["DSL", "Fiber optic", "No"])
-        satisfaction = st.selectbox("😊 How satisfied are you?", 
-                                   ["Very satisfied", "Satisfied", "Neutral", "Unsatisfied", "Very unsatisfied"])
+        satisfaction = st.selectbox("😊 How satisfied are you?",
+                                    ["Very satisfied", "Satisfied", "Neutral", "Unsatisfied", "Very unsatisfied"])
 
-    # Satisfaction adjustment
     satisfaction_scores = {
         "Very satisfied": -15,
         "Satisfied": -10,
@@ -150,19 +151,15 @@ else:
 
     if st.button("🔍 Check My Loyalty Score", use_container_width=True):
         score, reasons = predict_churn(tenure, monthly_charges/1000,
-                                       senior_citizen, contract, internet_service)
-        
-        # Add satisfaction score
+                                      senior_citizen, contract, internet_service)
         score = min(100, score + satisfaction_scores[satisfaction])
         if satisfaction in ["Unsatisfied", "Very unsatisfied"]:
             reasons.append(f"😞 You are {satisfaction.lower()} with your provider!")
-        
+
         _, customer_advice = show_result(score, reasons)
-        
         st.write("---")
         st.subheader(f"💡 Our Advice for You as a {provider} Customer")
         st.write(customer_advice)
-        
         if score >= 40:
             st.write("---")
-            st.info(f"💡 **Pro tip:** Call {provider} customer care and negotiate a better plan before leaving!")
+            st.info(f"💡 **Pro tip:** Call {provider} customer care and negotiate a better plan!")
