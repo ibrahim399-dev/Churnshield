@@ -131,6 +131,20 @@ elif mode == "📊 Business Analytics — Batch Prediction":
     st.write("---")
     st.info("📥 Your CSV must have these columns: **tenure, monthly_charges, senior_citizen, contract, internet_service**")
 
+    # Sample data button
+if st.button("📊 Load Sample Data Instead"):
+    import io
+    sample = """tenure,monthly_charges,senior_citizen,contract,internet_service
+5,45,No,Month-to-month,DSL
+34,89,No,One year,Fiber optic
+2,120,Yes,Month-to-month,Fiber optic
+45,56,No,Two year,DSL
+8,95,No,Month-to-month,Fiber optic
+60,34,No,Two year,No
+1,150,Yes,Month-to-month,Fiber optic
+23,67,No,One year,DSL"""
+    uploaded_file = io.StringIO(sample)
+else:
     uploaded_file = st.file_uploader("Upload your customer CSV file", type=["csv"])
 
     if uploaded_file is not None:
