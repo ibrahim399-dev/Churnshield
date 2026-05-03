@@ -132,10 +132,11 @@ elif mode == "📊 Business Analytics — Batch Prediction":
     st.write("---")
     st.info("📥 Your CSV must have these columns: **tenure, monthly_charges, senior_citizen, contract, internet_service**")
 
-    # Sample data button
-    use_sample = st.button("📊 Load Sample Data Instead")
+    # Session state for batch data
+    if "batch_df" not in st.session_state:
+        st.session_state.batch_df = None
 
-    if use_sample:
+    if st.button("📊 Load Sample Data Instead"):
         sample = """tenure,monthly_charges,senior_citizen,contract,internet_service
 5,45,No,Month-to-month,DSL
 34,89,No,One year,Fiber optic
@@ -145,8 +146,15 @@ elif mode == "📊 Business Analytics — Batch Prediction":
 60,34,No,Two year,No
 1,150,Yes,Month-to-month,Fiber optic
 23,67,No,One year,DSL"""
-        df = pd.read_csv(io.StringIO(sample))
-        st.write(f"✅ **{len(df)} sample customers loaded!**")
+        st.session_state.batch_df = pd.read_csv(io.StringIO(sample))
+
+    uploaded_file = st.file_uploader("Upload your customer CSV file", type=["csv"])
+    if uploaded_file is not None:
+        st.session_state.batch_df = pd.read_csv(uploaded_file)
+
+    if st.session_state.batch_df is not None:
+        df = st.session_state.batch_df
+        st.write(f"✅ **{len(df)} customers loaded!**")
         st.dataframe(df)
 
         if st.button("🔍 Predict Churn for All Customers", use_container_width=True):
@@ -195,60 +203,6 @@ elif mode == "📊 Business Analytics — Batch Prediction":
                 file_name="churnshield_results.csv",
                 mime="text/csv"
             )
-    else:
-        uploaded_file = st.file_uploader("Upload your customer CSV file", type=["csv"])
-
-        if uploaded_file is not None:
-            df = pd.read_csv(uploaded_file)
-            st.write(f"✅ **{len(df)} customers loaded!**")
-            st.dataframe(df.head())
-
-            if st.button("🔍 Predict Churn for All Customers", use_container_width=True):
-                results = []
-                for idx, row in df.iterrows():
-                    score, _ = predict_churn(
-                        row["tenure"],
-                        row["monthly_charges"],
-                        str(row["senior_citizen"]),
-                        row["contract"],
-                        row["internet_service"]
-                    )
-                    if score >= 60:
-                        risk = "VERY HIGH RISK"
-                    elif score >= 40:
-                        risk = "HIGH RISK"
-                    elif score >= 20:
-                        risk = "MEDIUM RISK"
-                    else:
-                        risk = "LOW RISK"
-
-                    results.append({
-                        "Customer": idx + 1,
-                        "Risk Score": score,
-                        "Risk Level": risk
-                    })
-
-                results_df = pd.DataFrame(results)
-
-                st.write("---")
-                st.subheader("📈 Batch Results Summary")
-                col1, col2, col3, col4 = st.columns(4)
-                col1.metric("Total Customers", len(results_df))
-                col2.metric("Very High Risk", len(results_df[results_df["Risk Level"] == "VERY HIGH RISK"]))
-                col3.metric("High Risk", len(results_df[results_df["Risk Level"] == "HIGH RISK"]))
-                col4.metric("Low Risk", len(results_df[results_df["Risk Level"] == "LOW RISK"]))
-
-                st.write("---")
-                st.subheader("📋 Full Results")
-                st.dataframe(results_df)
-
-                csv = results_df.to_csv(index=False)
-                st.download_button(
-                    label="📥 Download Results as CSV",
-                    data=csv,
-                    file_name="churnshield_results.csv",
-                    mime="text/csv"
-                )
 
 # CUSTOMER MODE
 elif mode == "👤 Customer — Check if I will leave my provider":
