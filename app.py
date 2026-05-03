@@ -78,12 +78,16 @@ st.title("🛡️ ChurnShield-NG")
 st.write("Built by **Ajayi Ibrahim Ademola** — Data Science & ML, AAUA")
 st.write("---")
 
-# MODE SELECTOR
-st.subheader("👇 Who are you?")
-mode = st.selectbox("Select your mode", [
+# MODmode = st.selectbox("Select your mode", [
+    "👇 Please select...",
     "🏢 Business Owner — Predict if my customer will churn",
     "👤 Customer — Check if I will leave my provider"
 ])
+
+if mode == "👇 Please select...":
+    st.warning("👆 Please select who you are to continue!")
+    st.stop()
+s
 
 st.write("---")
 
