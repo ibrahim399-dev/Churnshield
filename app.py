@@ -70,13 +70,13 @@ def show_result(score, reasons):
 
 # Page config
 st.set_page_config(
-    page_title="ChurnShield-NG",
+    page_title="Shield Ai",
     page_icon="🛡️",
     layout="centered"
 )
 
 # HERO SECTION
-st.title("🛡️ ChurnShield-NG")
+st.title("🛡️ Shield Ai-NG")
 st.subheader("AI-Powered Customer Churn Prediction")
 st.write("Helping Nigerian businesses retain customers and grow revenue!")
 st.write("---")
@@ -306,7 +306,7 @@ st.write("---")
 st.subheader("📬 Contact & About")
 col1, col2 = st.columns(2)
 with col1:
-    st.write("**👨‍💻 Built by:**")
+    st.write("**👨‍💻 Shield Ai by:**")
     st.write("Ajayi Ibrahim Ademola")
     st.write("Data Science & ML Developer")
 with col2:
@@ -315,4 +315,4 @@ with col2:
     st.write("💼 Open to partnerships & collaborations!")
 
 st.write("---")
-st.caption("© 2026 ChurnShield-NG | AI-Powered Churn Prediction | All Rights Reserved")
+st.caption("© 2026 ShieldAI | ChurnShield-NG | AI-Powered Churn Prediction | All Rights Reserved")
