@@ -1,6 +1,5 @@
 streamlit
 pandas
 numpy
-joblib
-requests
-scikit-learn
+streamlit-authenticator
+PyYAML
