@@ -82,7 +82,8 @@ st.write("---")
 st.subheader("👇 Who are you?")
 mode = st.selectbox("Select your mode", [
     "👇 Please select...",
-    "🏢 Business Owner — Predict if my customer will churn",
+    "🏢 Business Owner — Single Prediction",
+    "📊 Business Analytics — Batch Prediction",
     "👤 Customer — Check if I will leave my provider"
 ])
 
@@ -163,3 +164,79 @@ else:
         if score >= 40:
             st.write("---")
             st.info(f"💡 **Pro tip:** Call {provider} customer care and negotiate a better plan!")
+# existing code above...
+        if score >= 40:
+            st.write("---")
+            st.info(f"💡 **Pro tip:** Call {provider} customer care and negotiate a better plan!")
+
+# BATCH PREDICTION MODE ← ADD THIS BELOW
+elif mode == "📊 Business Analytics — Batch Prediction":
+    st.subheader("📊 Batch Prediction Mode")
+# rest of batch code...
+# BATCH PREDICTION MODE
+elif mode == "📊 Business Analytics — Batch Prediction":
+    st.subheader("📊 Batch Prediction Mode")
+    st.write("Upload a CSV file to predict churn for multiple customers at once!")
+
+    st.write("---")
+    st.info("📥 Your CSV must have these columns: **tenure, monthly_charges, senior_citizen, contract, internet_service**")
+
+    uploaded_file = st.file_uploader("Upload your customer CSV file", type=["csv"])
+
+    if uploaded_file is not None:
+        import pandas as pd
+        import io
+
+        df = pd.read_csv(uploaded_file)
+        st.write(f"✅ **{len(df)} customers loaded!**")
+        st.dataframe(df.head())
+
+        if st.button("🔍 Predict Churn for All Customers", use_container_width=True):
+            results = []
+            for _, row in df.iterrows():
+                score, _ = predict_churn(
+                    row["tenure"],
+                    row["monthly_charges"],
+                    str(row["senior_citizen"]),
+                    row["contract"],
+                    row["internet_service"]
+                )
+                if score >= 60:
+                    risk = "VERY HIGH RISK"
+                elif score >= 40:
+                    risk = "HIGH RISK"
+                elif score >= 20:
+                    risk = "MEDIUM RISK"
+                else:
+                    risk = "LOW RISK"
+
+                results.append({
+                    "Customer": _ + 1,
+                    "Risk Score": score,
+                    "Risk Level": risk
+                })
+
+            results_df = pd.DataFrame(results)
+
+            # Summary
+            st.write("---")
+            st.subheader("📈 Batch Results Summary")
+            col1, col2, col3, col4 = st.columns(4)
+            col1.metric("Total Customers", len(results_df))
+            col2.metric("Very High Risk", len(results_df[results_df["Risk Level"] == "VERY HIGH RISK"]))
+            col3.metric("High Risk", len(results_df[results_df["Risk Level"] == "HIGH RISK"]))
+            col4.metric("Low Risk", len(results_df[results_df["Risk Level"] == "LOW RISK"]))
+
+            # Show results
+            st.write("---")
+            st.subheader("📋 Full Results")
+            st.dataframe(results_df)
+
+            # Download button
+            csv = results_df.to_csv(index=False)
+            st.download_button(
+                label="📥 Download Results as CSV",
+                data=csv,
+                file_name="churnshield_results.csv",
+                mime="text/csv"
+                )
