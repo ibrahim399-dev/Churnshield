@@ -355,7 +355,7 @@ if st.button("🔍 Predict Churn Risk", use_container_width=True, key="single"):
             st.write(f"**{recommendation}**")
 
     # ---- TAB 2 ----
-    with tab2:
+        with tab2:
         st.subheader("📊 Batch Analysis")
         st.write("Predict churn for multiple customers at once!")
         st.write("---")
