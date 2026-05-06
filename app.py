@@ -279,7 +279,7 @@ if "demo" in st.session_state and st.session_state.demo:
     contract = "Month-to-month"
     internet_service = "Fiber optic"
     st.info("✅ Demo data loaded! Click Predict to see results!")
-        if st.button("🔍 Predict Churn Risk", use_container_width=True, key="single"):
+if st.button("🔍 Predict Churn Risk", use_container_width=True, key="single"):
             with st.spinner("🤖 AI is analyzing customer data..."):
                 score, reasons, positives, insights = predict_churn(
                     tenure, monthly_charges/1000,
