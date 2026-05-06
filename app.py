@@ -496,4 +496,55 @@ def show_churn():
                 """)
                 advice = f"Call {provider} NOW and tell them you're thinking of leaving — they'll offer you a deal!"
             elif score >= 40:
+                st.warning(f"""
+                ## 🟡 YOU MIGHT LEAVE SOON
+                **Risk Score: {score}/100**
+                You're showing signs of dissatisfaction!
+                """)
+                advice = f"Ask {provider} for a loyalty discount — you deserve one!"
+            elif score >= 20:
+                st.info(f"""
+                ## 🔵 YOU'RE SOMEWHAT SATISFIED
+                **Risk Score: {score}/100**
+                You're okay but could be happier!
+                """)
+                advice = f"Explore what other {provider} plans are available!"
+            else:
+                st.success(f"""
+                ## ✅ YOU ARE A LOYAL CUSTOMER!
+                **Loyalty Score: {100-score}/100**
+                You're happy with {provider}!
+                """)
+                advice = f"Keep enjoying {provider}'s service!"
+
+            st.progress(score/100)
+
+            st.write("---")
+            st.subheader("🔍 Why This Result?")
+            if reasons:
+                st.write("**⚠️ Risk factors:**")
+                for reason in reasons:
+                    st.write(f"• {reason}")
+            if positives:
+                st.write("**✅ Good factors:**")
+                for positive in positives:
+                    st.write(f"• {positive}")
+
+            st.write("---")
+            st.subheader("💡 Our Advice")
+            st.info(f"💡 {advice}")
+
+    st.write("---")
+    if st.button("← Back to Models", use_container_width=True):
+        go_to("models")
+
+# ============================================
+# ROUTER
+# ============================================
+if st.session_state.page == "home":
+    show_home()
+elif st.session_state.page == "models":
+    show_models()
+elif st.session_state.page == "churn":
+    show_churn()
    
