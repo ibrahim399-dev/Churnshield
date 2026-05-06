@@ -267,7 +267,18 @@ def show_churn():
         col3.metric("Tenure", f"{tenure} months")
         col4.metric("Monthly Bill", f"₦{monthly_charges:,.0f}")
         col5.metric("Contract", contract.split()[0])
+# Demo data button
+if st.button("📊 Try Demo Data", use_container_width=True, key="demo"):
+    st.session_state.demo = True
+    st.rerun()
 
+if "demo" in st.session_state and st.session_state.demo:
+    tenure = 5
+    monthly_charges = 85000
+    senior_citizen = "No"
+    contract = "Month-to-month"
+    internet_service = "Fiber optic"
+    st.info("✅ Demo data loaded! Click Predict to see results!")
         if st.button("🔍 Predict Churn Risk", use_container_width=True, key="single"):
             with st.spinner("🤖 AI is analyzing customer data..."):
                 score, reasons, positives, insights = predict_churn(
