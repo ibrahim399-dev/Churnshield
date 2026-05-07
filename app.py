@@ -14,7 +14,7 @@ def predict_churn(tenure, monthly_charges, senior_citizen, contract, internet_se
     if contract == "Month-to-month":
         risk_score += 40
         reasons.append("📋 Month-to-month contract — no commitment, easy to leave!")
-        business_insights.append("💡 Customers on month-to-month contracts are 3x more likely to churn than those on annual contracts.")
+        business_insights.append("💡 Customers on month-to-month contracts are 3x more likely to churn than annual contracts.")
     elif contract == "One year":
         risk_score += 10
         reasons.append("📋 One year contract — some commitment exists")
@@ -38,26 +38,26 @@ def predict_churn(tenure, monthly_charges, senior_citizen, contract, internet_se
     if tenure < 12:
         risk_score += 20
         reasons.append("📅 New customer — loyalty not yet established!")
-        business_insights.append("💡 First year customers are the highest churn risk — invest in onboarding and early engagement.")
+        business_insights.append("💡 First year customers are highest churn risk — invest in onboarding!")
     elif tenure < 24:
         risk_score += 10
         reasons.append("📅 Relatively new customer — still building loyalty")
-        business_insights.append("💡 Customers in months 12-24 respond well to loyalty rewards and milestone recognition.")
+        business_insights.append("💡 Customers in months 12-24 respond well to loyalty rewards!")
     else:
         positive_factors.append("📅 Long term customer — high loyalty established!")
-        business_insights.append("💡 Long term customers are brand ambassadors — consider referral programs for them.")
+        business_insights.append("💡 Long term customers are brand ambassadors — consider referral programs!")
 
     if senior_citizen == "Yes":
         risk_score += 10
         reasons.append("👤 Senior citizens statistically show higher churn rates!")
-        business_insights.append("💡 Senior customers respond well to dedicated support lines and simplified billing.")
+        business_insights.append("💡 Senior customers respond well to dedicated support and simplified billing.")
     else:
         positive_factors.append("👤 Non-senior citizen — lower demographic risk!")
 
     if internet_service == "Fiber optic":
         risk_score += 5
         reasons.append("🌐 Fiber optic users tend to be more price sensitive!")
-        business_insights.append("💡 Fiber optic customers churn when they find better speeds or prices — emphasize your reliability!")
+        business_insights.append("💡 Fiber optic customers churn when they find better speeds — emphasize reliability!")
     elif internet_service == "No":
         positive_factors.append("🌐 No internet service — simpler relationship to maintain!")
 
@@ -79,6 +79,8 @@ if "page" not in st.session_state:
     st.session_state.page = "home"
 if "batch_df" not in st.session_state:
     st.session_state.batch_df = None
+if "demo_loaded" not in st.session_state:
+    st.session_state.demo_loaded = False
 
 def go_to(page):
     st.session_state.page = page
@@ -88,14 +90,16 @@ def go_to(page):
 # HOME PAGE
 # ============================================
 def show_home():
-    # Hero section
     st.title("🛡️ ShieldAI")
     st.markdown("## Reduce Customer Loss with AI")
     st.markdown("### Predict which customers will leave — before they do.")
-    st.write("ShieldAI is a Nigerian AI platform for decision intelligence. We help businesses and individuals make smarter decisions using Machine Learning.")
+
+    # WHY THIS MATTERS
+    st.error("💸 **Why This Matters:** Losing customers costs businesses millions every year. ShieldAI helps you identify high-risk customers BEFORE they leave — so you can act fast and retain them!")
+
+    st.write("ShieldAI is a Nigerian AI platform for decision intelligence. Making advanced AI accessible to everyone — regardless of sector!")
     st.write("---")
 
-    # Trust elements
     col1, col2, col3, col4 = st.columns(4)
     col1.metric("📊 Dataset", "7,043+ Records")
     col2.metric("🎯 Accuracy", "78.68%")
@@ -103,49 +107,34 @@ def show_home():
     col4.metric("🌍 Countries", "8+ African")
     st.write("---")
 
-    # Powered by section
-    st.info("🔬 **Powered by Machine Learning** | 📊 **Model Accuracy: 78.68%** | 🗄️ **Dataset: 7,000+ Records** | ⚙️ **Algorithm: Gradient Boosting**")
+    st.info("🔬 **Powered by Machine Learning** | 📊 **Accuracy: 78.68%** | 🗄️ **Dataset: 7,000+ Records** | ⚙️ **Gradient Boosting Algorithm**")
     st.write("---")
 
-    # Modules
     st.subheader("🚀 ShieldAI Modules")
-    st.write("One platform — multiple AI models — every sector!")
-
     col1, col2, col3 = st.columns(3)
     with col1:
         st.success("""
         🛡️ **Customer Intelligence**
-        
         ChurnShield
-        
         Predict customer churn before it happens!
-        
         ✅ Available Now
         """)
     with col2:
         st.warning("""
         ❤️ **Health Risk Prediction**
-        
         HeartGuard
-        
-        Predict heart disease risk from health data!
-        
+        Predict heart disease risk!
         🔄 Coming Soon
         """)
     with col3:
         st.info("""
-        🎓 **Student Performance Analytics**
-        
+        🎓 **Student Analytics**
         StudyShield
-        
-        Predict student outcomes and dropout risk!
-        
+        Predict student performance!
         🔄 Coming Soon
         """)
 
     st.write("---")
-
-    # How it works
     st.subheader("⚡ How It Works")
     col1, col2, col3 = st.columns(3)
     with col1:
@@ -155,18 +144,17 @@ def show_home():
     with col2:
         st.write("### 2️⃣")
         st.write("**Enter Data**")
-        st.write("Fill in the details — takes less than a minute!")
+        st.write("Fill in details — takes less than a minute!")
     with col3:
         st.write("### 3️⃣")
         st.write("**Get Prediction**")
-        st.write("Receive instant AI prediction with full explanation!")
+        st.write("Instant AI prediction with full explanation!")
 
     st.write("---")
     if st.button("🚀 Get Started — It's Free!", use_container_width=True):
         go_to("models")
 
     st.write("---")
-    # Contact
     col1, col2 = st.columns(2)
     with col1:
         st.write("**👨‍💻 Built by:**")
@@ -175,7 +163,7 @@ def show_home():
     with col2:
         st.write("**📧 Contact:**")
         st.write("ibrahimdamola405@gmail.com")
-        st.write("💼 Open to partnerships & collaborations!")
+        st.write("💼 Open to partnerships!")
 
     st.caption("© 2026 ShieldAI | Nigerian AI Platform for Decision Intelligence | All Rights Reserved")
 
@@ -189,12 +177,10 @@ def show_models():
     st.write("---")
 
     col1, col2, col3 = st.columns(3)
-
     with col1:
         st.success("🛡️ **ChurnShield**")
         st.write("**Customer Intelligence**")
         st.write("Predict if customers will leave before they do!")
-        st.write("")
         st.write("✅ **Status:** Live")
         st.write("🎯 **Accuracy:** 78.68%")
         st.write("👥 **For:** Businesses & Customers")
@@ -204,8 +190,7 @@ def show_models():
     with col2:
         st.warning("❤️ **HeartGuard**")
         st.write("**Health Risk Prediction**")
-        st.write("Predict heart disease risk from your health data!")
-        st.write("")
+        st.write("Predict heart disease risk from health data!")
         st.write("🔄 **Status:** Coming Soon")
         st.write("🎯 **Accuracy:** In training")
         st.write("👥 **For:** Individuals & Hospitals")
@@ -214,8 +199,7 @@ def show_models():
     with col3:
         st.info("🎓 **StudyShield**")
         st.write("**Student Analytics**")
-        st.write("Predict student performance and dropout risk!")
-        st.write("")
+        st.write("Predict student performance!")
         st.write("🔄 **Status:** Coming Soon")
         st.write("🎯 **Accuracy:** In training")
         st.write("👥 **For:** Schools & Students")
@@ -224,8 +208,7 @@ def show_models():
     st.write("---")
     if st.button("← Back to Home", use_container_width=True):
         go_to("home")
-
-# ============================================
+        # ============================================
 # CHURNSHIELD PAGE
 # ============================================
 def show_churn():
@@ -243,21 +226,47 @@ def show_churn():
     # ---- TAB 1 ----
     with tab1:
         st.subheader("🏢 Single Customer Prediction")
-        st.write("Enter customer details below to predict churn risk!")
+        st.write("Enter customer details to predict churn risk!")
         st.write("---")
+
+        # Demo data loader
+        if st.button("📊 Try Demo Data — Auto Fill Form", use_container_width=True, key="demo"):
+            st.session_state.demo_loaded = True
+
+        # Set values
+        if st.session_state.demo_loaded:
+            st.success("✅ Demo data loaded! See predicted high risk customer below!")
+            default_tenure = 5
+            default_charges = 85000.0
+            default_senior = "No"
+            default_contract = "Month-to-month"
+            default_internet = "Fiber optic"
+        else:
+            default_tenure = 12
+            default_charges = 5000.0
+            default_senior = "No"
+            default_contract = "Month-to-month"
+            default_internet = "DSL"
 
         col1, col2 = st.columns(2)
         with col1:
-            tenure = st.slider("📅 Tenure (months)", 0, 72, 12,
+            tenure = st.slider("📅 Tenure (months)", 0, 72,
+                             default_tenure,
                              help="How long has this customer been with you?")
-            monthly_charges = st.number_input("💰 Monthly Charges (₦)", 0.0, 200000.0, 5000.0,
+            monthly_charges = st.number_input("💰 Monthly Charges (₦)",
+                                            0.0, 200000.0,
+                                            default_charges,
                                             help="How much does this customer pay monthly?")
-            senior_citizen = st.selectbox("👤 Senior Citizen?", ["No", "Yes"])
+            senior_citizen = st.selectbox("👤 Senior Citizen?",
+                                        ["No", "Yes"],
+                                        index=0 if default_senior == "No" else 1)
         with col2:
             contract = st.selectbox("📋 Contract Type",
-                                  ["Month-to-month", "One year", "Two year"])
+                                  ["Month-to-month", "One year", "Two year"],
+                                  index=["Month-to-month", "One year", "Two year"].index(default_contract))
             internet_service = st.selectbox("🌐 Internet Service",
-                                          ["DSL", "Fiber optic", "No"])
+                                          ["DSL", "Fiber optic", "No"],
+                                          index=["DSL", "Fiber optic", "No"].index(default_internet))
             payment_method = st.selectbox("💳 Payment Method",
                                         ["Bank transfer", "Credit card",
                                          "Electronic check", "Mailed check"])
@@ -280,38 +289,45 @@ def show_churn():
             # WOW MOMENT
             if score >= 60:
                 st.error(f"""
-                ## ⚠️ HIGH CHURN RISK DETECTED!
-                **Confidence: {score}%**
-                This customer is very likely to leave!
+## ⚠️ HIGH RISK CUSTOMER DETECTED!
+**Confidence: {score}%**
+
+This customer is very likely to leave!
                 """)
                 recommendation = "🚨 Act immediately — offer special discount or upgrade plan!"
                 risk_label = "🔴 HIGH RISK"
+                risk_color = "error"
             elif score >= 40:
                 st.warning(f"""
-                ## 🟡 MEDIUM CHURN RISK DETECTED
-                **Confidence: {score}%**
-                This customer may leave soon!
+## 🟡 MEDIUM RISK CUSTOMER
+**Confidence: {score}%**
+
+This customer may leave soon!
                 """)
                 recommendation = "📞 Call customer and offer loyalty rewards!"
                 risk_label = "🟡 MEDIUM RISK"
+                risk_color = "warning"
             elif score >= 20:
                 st.info(f"""
-                ## 🔵 LOW-MEDIUM CHURN RISK
-                **Confidence: {score}%**
-                This customer shows some risk signals!
+## 🔵 LOW-MEDIUM RISK CUSTOMER
+**Confidence: {score}%**
+
+This customer shows some risk signals!
                 """)
                 recommendation = "👀 Monitor closely and send satisfaction survey!"
                 risk_label = "🔵 LOW-MEDIUM RISK"
+                risk_color = "info"
             else:
                 st.success(f"""
-                ## ✅ LOW CHURN RISK
-                **Loyalty Score: {100-score}%**
-                This customer is likely to stay!
-                """)
-                recommendation = "😊 Customer is loyal — maintain excellent service!"
-                risk_label = "✅ LOW RISK"
+## ✅ LOW RISK — LOYAL CUSTOMER
+**Loyalty Score: {100-score}%**
 
-            # Risk meter
+This customer is happy and likely to stay!
+                """)
+                recommendation = "😊 Maintain excellent service — customer is loyal!"
+                risk_label = "✅ LOW RISK"
+                risk_color = "success"
+
             col1, col2 = st.columns(2)
             col1.metric("Risk Level", risk_label)
             col2.metric("Risk Score", f"{score}/100")
@@ -320,12 +336,10 @@ def show_churn():
             # Explanation
             st.write("---")
             st.subheader("🔍 Why This Prediction?")
-
             if reasons:
                 st.write("**⚠️ Risk Factors:**")
                 for reason in reasons:
                     st.write(f"• {reason}")
-
             if positives:
                 st.write("**✅ Positive Factors:**")
                 for positive in positives:
@@ -334,11 +348,10 @@ def show_churn():
             # Business Insights
             st.write("---")
             st.subheader("💡 Business Intelligence")
-            st.write("*Data-driven insights to help you act smarter:*")
             for insight in insights:
                 st.write(insight)
 
-            # Recommended Action
+            # Action
             st.write("---")
             st.subheader("📋 Recommended Action")
             st.write(f"**{recommendation}**")
@@ -383,13 +396,13 @@ def show_churn():
                             row["internet_service"]
                         )
                         if score >= 60:
-                            risk = "HIGH RISK — Will Churn"
+                            risk = "🔴 HIGH RISK — Will Churn"
                         elif score >= 40:
-                            risk = "MEDIUM RISK — Likely to Churn"
+                            risk = "🟡 MEDIUM RISK — Likely to Churn"
                         elif score >= 20:
-                            risk = "LOW-MEDIUM RISK"
+                            risk = "🔵 LOW-MEDIUM RISK"
                         else:
-                            risk = "LOW RISK — Will Stay"
+                            risk = "✅ LOW RISK — Will Stay"
 
                         results.append({
                             "Customer #": idx + 1,
@@ -402,10 +415,10 @@ def show_churn():
                 st.write("---")
                 st.subheader("📈 Analysis Summary")
                 col1, col2, col3, col4 = st.columns(4)
-                col1.metric("Total Analyzed", len(results_df))
+                col1.metric("Total", len(results_df))
                 col2.metric("🔴 High Risk", len([r for r in results if "HIGH RISK" in r["Prediction"] and "MEDIUM" not in r["Prediction"]]))
-                col3.metric("🟡 Medium Risk", len([r for r in results if "MEDIUM" in r["Prediction"]]))
-                col4.metric("✅ Low Risk", len([r for r in results if "LOW RISK — Will Stay" in r["Prediction"]]))
+                col3.metric("🟡 Medium", len([r for r in results if "MEDIUM" in r["Prediction"]]))
+                col4.metric("✅ Safe", len([r for r in results if "Will Stay" in r["Prediction"]]))
 
                 st.write("---")
                 st.subheader("📊 Risk Distribution")
@@ -463,22 +476,27 @@ def show_churn():
             tenure = st.slider("📅 Months with provider", 0, 72, 12, key="lt")
             monthly_charges = st.number_input(f"💰 Monthly payment ({currency})",
                                             0.0, 200000.0, 5000.0, key="lc")
-            senior_citizen = st.selectbox("👤 Senior citizen?", ["No", "Yes"], key="ls")
+            senior_citizen = st.selectbox("👤 Senior citizen?",
+                                        ["No", "Yes"], key="ls")
         with col2:
             contract = st.selectbox("📋 Plan type",
-                                  ["Month-to-month", "One year", "Two year"], key="lco")
+                                  ["Month-to-month", "One year", "Two year"],
+                                  key="lco")
             internet_service = st.selectbox("🌐 Internet type",
-                                          ["DSL", "Fiber optic", "No"], key="li")
+                                          ["DSL", "Fiber optic", "No"],
+                                          key="li")
             satisfaction = st.selectbox("😊 How satisfied are you?",
                                       ["Very satisfied", "Satisfied",
-                                       "Neutral", "Unsatisfied", "Very unsatisfied"])
+                                       "Neutral", "Unsatisfied",
+                                       "Very unsatisfied"])
 
         satisfaction_scores = {
             "Very satisfied": -15, "Satisfied": -10,
             "Neutral": 0, "Unsatisfied": 15, "Very unsatisfied": 25
         }
 
-        if st.button("🔍 Check My Loyalty Score", use_container_width=True, key="loyalty"):
+        if st.button("🔍 Check My Loyalty Score",
+                    use_container_width=True, key="loyalty"):
             with st.spinner("🤖 Analyzing your loyalty score..."):
                 score, reasons, positives, _ = predict_churn(
                     tenure, monthly_charges/1000,
@@ -490,32 +508,32 @@ def show_churn():
 
             if score >= 60:
                 st.error(f"""
-                ## ⚠️ YOU ARE VERY LIKELY TO LEAVE!
-                **Risk Score: {score}/100**
-                Our AI predicts you will leave {provider} soon!
+## ⚠️ YOU ARE VERY LIKELY TO LEAVE!
+**Risk Score: {score}/100**
+Our AI predicts you will leave {provider} soon!
                 """)
-                advice = f"Call {provider} NOW and tell them you're thinking of leaving — they'll offer you a deal!"
+                advice = f"Call {provider} NOW and say you're thinking of leaving — they'll offer you a deal!"
             elif score >= 40:
                 st.warning(f"""
-                ## 🟡 YOU MIGHT LEAVE SOON
-                **Risk Score: {score}/100**
-                You're showing signs of dissatisfaction!
+## 🟡 YOU MIGHT LEAVE SOON
+**Risk Score: {score}/100**
+You're showing signs of dissatisfaction!
                 """)
                 advice = f"Ask {provider} for a loyalty discount — you deserve one!"
             elif score >= 20:
                 st.info(f"""
-                ## 🔵 YOU'RE SOMEWHAT SATISFIED
-                **Risk Score: {score}/100**
-                You're okay but could be happier!
+## 🔵 YOU'RE SOMEWHAT SATISFIED
+**Risk Score: {score}/100**
+You're okay but could be happier!
                 """)
                 advice = f"Explore what other {provider} plans are available!"
             else:
                 st.success(f"""
-                ## ✅ YOU ARE A LOYAL CUSTOMER!
-                **Loyalty Score: {100-score}/100**
-                You're happy with {provider}!
+## ✅ YOU ARE A LOYAL CUSTOMER!
+**Loyalty Score: {100-score}/100**
+You're happy with {provider}!
                 """)
-                advice = f"Keep enjoying {provider}'s service!"
+                advice = f"Keep enjoying {provider}'s service — you're getting great value!"
 
             st.progress(score/100)
 
@@ -547,4 +565,3 @@ elif st.session_state.page == "models":
     show_models()
 elif st.session_state.page == "churn":
     show_churn()
-   
