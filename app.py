@@ -2,12 +2,16 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import io
-from sklearn.ensemble import GradientBoostingClassifier
-from sklearn.svm import SVC
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import accuracy_score
 
+try:
+    from sklearn.ensemble import GradientBoostingClassifier
+    from sklearn.svm import SVC
+    from sklearn.model_selection import train_test_split
+    from sklearn.preprocessing import StandardScaler
+    from sklearn.metrics import accuracy_score
+    SKLEARN_AVAILABLE = True
+except ImportError:
+    SKLEARN_AVAILABLE = False
 # ============================================
 # CHURN PREDICTION ENGINE
 # ============================================
