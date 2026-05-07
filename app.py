@@ -1,9 +1,15 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 import io
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.svm import SVC
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score
 
 # ============================================
-# PREDICTION ENGINE
+# CHURN PREDICTION ENGINE
 # ============================================
 def predict_churn(tenure, monthly_charges, senior_citizen, contract, internet_service):
     risk_score = 0
@@ -64,6 +70,30 @@ def predict_churn(tenure, monthly_charges, senior_citizen, contract, internet_se
     return risk_score, reasons, positive_factors, business_insights
 
 # ============================================
+# HEARTGUARD MODEL LOADER
+# ============================================
+@st.cache_resource
+def load_heartguard_model():
+    url = "https://raw.githubusercontent.com/dsrscientist/dataset1/master/heart_disease.csv"
+    df = pd.read_csv(url)
+
+    X = df.drop("target", axis=1)
+    y = df["target"]
+
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
+
+    X_train, X_test, y_train, y_test = train_test_split(
+        X_scaled, y, test_size=0.2, random_state=42
+    )
+
+    model = SVC(probability=True, random_state=42)
+    model.fit(X_train, y_train)
+
+    accuracy = accuracy_score(y_test, model.predict(X_test))
+    return model, scaler, round(accuracy * 100, 2)
+
+# ============================================
 # PAGE CONFIG
 # ============================================
 st.set_page_config(
@@ -91,23 +121,22 @@ def go_to(page):
 # ============================================
 def show_home():
     st.title("🛡️ ShieldAI")
-    st.markdown("## Reduce Customer Loss with AI")
-    st.markdown("### Predict which customers will leave — before they do.")
+    st.markdown("## Reduce Risk with AI")
+    st.markdown("### Predict outcomes before they happen — in any sector!")
 
-    # WHY THIS MATTERS
-    st.error("💸 **Why This Matters:** Losing customers costs businesses millions every year. ShieldAI helps you identify high-risk customers BEFORE they leave — so you can act fast and retain them!")
+    st.error("💸 **Why This Matters:** Losing customers costs businesses millions. Poor health decisions cost lives. ShieldAI helps you predict risks BEFORE they become problems!")
 
     st.write("ShieldAI is a Nigerian AI platform for decision intelligence. Making advanced AI accessible to everyone — regardless of sector!")
     st.write("---")
 
     col1, col2, col3, col4 = st.columns(4)
-    col1.metric("📊 Dataset", "7,043+ Records")
-    col2.metric("🎯 Accuracy", "78.68%")
-    col3.metric("🤖 Algorithm", "Gradient Boost")
+    col1.metric("📊 Records", "7,000+")
+    col2.metric("🎯 Accuracy", "Up to 87%")
+    col3.metric("🤖 Models", "2 Live!")
     col4.metric("🌍 Countries", "8+ African")
     st.write("---")
 
-    st.info("🔬 **Powered by Machine Learning** | 📊 **Accuracy: 78.68%** | 🗄️ **Dataset: 7,000+ Records** | ⚙️ **Gradient Boosting Algorithm**")
+    st.info("🔬 **Powered by Machine Learning** | 📊 **Up to 86.89% Accuracy** | 🗄️ **Real World Datasets** | ⚙️ **SVM & Gradient Boosting**")
     st.write("---")
 
     st.subheader("🚀 ShieldAI Modules")
@@ -120,11 +149,11 @@ def show_home():
         ✅ Available Now
         """)
     with col2:
-        st.warning("""
+        st.success("""
         ❤️ **Health Risk Prediction**
         HeartGuard
         Predict heart disease risk!
-        🔄 Coming Soon
+        ✅ Available Now
         """)
     with col3:
         st.info("""
@@ -180,7 +209,7 @@ def show_models():
     with col1:
         st.success("🛡️ **ChurnShield**")
         st.write("**Customer Intelligence**")
-        st.write("Predict if customers will leave before they do!")
+        st.write("Predict if customers will leave!")
         st.write("✅ **Status:** Live")
         st.write("🎯 **Accuracy:** 78.68%")
         st.write("👥 **For:** Businesses & Customers")
@@ -188,13 +217,14 @@ def show_models():
             go_to("churn")
 
     with col2:
-        st.warning("❤️ **HeartGuard**")
+        st.success("❤️ **HeartGuard**")
         st.write("**Health Risk Prediction**")
-        st.write("Predict heart disease risk from health data!")
-        st.write("🔄 **Status:** Coming Soon")
-        st.write("🎯 **Accuracy:** In training")
+        st.write("Predict heart disease risk!")
+        st.write("✅ **Status:** Live")
+        st.write("🎯 **Accuracy:** 86.89%")
         st.write("👥 **For:** Individuals & Hospitals")
-        st.button("Coming Soon ❤️", disabled=True, use_container_width=True)
+        if st.button("Launch HeartGuard →", use_container_width=True):
+            go_to("heart")
 
     with col3:
         st.info("🎓 **StudyShield**")
@@ -214,7 +244,7 @@ def show_models():
 def show_churn():
     st.title("🛡️ ChurnShield")
     st.write("**A ShieldAI Product** | Customer Intelligence Module")
-    st.info("🔬 Powered by Machine Learning | 🎯 78.68% Accuracy | 📊 Trained on 7,043 Records")
+    st.info("🔬 Powered by Gradient Boosting | 🎯 78.68% Accuracy | 📊 Trained on 7,043 Records")
     st.write("---")
 
     tab1, tab2, tab3 = st.tabs([
@@ -223,19 +253,16 @@ def show_churn():
         "👤 Loyalty Check"
     ])
 
-    # ---- TAB 1 ----
     with tab1:
         st.subheader("🏢 Single Customer Prediction")
         st.write("Enter customer details to predict churn risk!")
         st.write("---")
 
-        # Demo data loader
-        if st.button("📊 Try Demo Data — Auto Fill Form", use_container_width=True, key="demo"):
+        if st.button("📊 Try Demo Data", use_container_width=True, key="demo"):
             st.session_state.demo_loaded = True
 
-        # Set values
         if st.session_state.demo_loaded:
-            st.success("✅ Demo data loaded! See predicted high risk customer below!")
+            st.success("✅ Demo data loaded!")
             default_tenure = 5
             default_charges = 85000.0
             default_senior = "No"
@@ -250,15 +277,9 @@ def show_churn():
 
         col1, col2 = st.columns(2)
         with col1:
-            tenure = st.slider("📅 Tenure (months)", 0, 72,
-                             default_tenure,
-                             help="How long has this customer been with you?")
-            monthly_charges = st.number_input("💰 Monthly Charges (₦)",
-                                            0.0, 200000.0,
-                                            default_charges,
-                                            help="How much does this customer pay monthly?")
-            senior_citizen = st.selectbox("👤 Senior Citizen?",
-                                        ["No", "Yes"],
+            tenure = st.slider("📅 Tenure (months)", 0, 72, default_tenure)
+            monthly_charges = st.number_input("💰 Monthly Charges (₦)", 0.0, 200000.0, default_charges)
+            senior_citizen = st.selectbox("👤 Senior Citizen?", ["No", "Yes"],
                                         index=0 if default_senior == "No" else 1)
         with col2:
             contract = st.selectbox("📋 Contract Type",
@@ -285,55 +306,44 @@ def show_churn():
                 )
 
             st.write("---")
-
-            # WOW MOMENT
             if score >= 60:
                 st.error(f"""
 ## ⚠️ HIGH RISK CUSTOMER DETECTED!
 **Confidence: {score}%**
-
 This customer is very likely to leave!
                 """)
-                recommendation = "🚨 Act immediately — offer special discount or upgrade plan!"
+                recommendation = "🚨 Act immediately — offer special discount or upgrade!"
                 risk_label = "🔴 HIGH RISK"
-                risk_color = "error"
             elif score >= 40:
                 st.warning(f"""
 ## 🟡 MEDIUM RISK CUSTOMER
 **Confidence: {score}%**
-
 This customer may leave soon!
                 """)
                 recommendation = "📞 Call customer and offer loyalty rewards!"
                 risk_label = "🟡 MEDIUM RISK"
-                risk_color = "warning"
             elif score >= 20:
                 st.info(f"""
 ## 🔵 LOW-MEDIUM RISK CUSTOMER
 **Confidence: {score}%**
-
 This customer shows some risk signals!
                 """)
                 recommendation = "👀 Monitor closely and send satisfaction survey!"
                 risk_label = "🔵 LOW-MEDIUM RISK"
-                risk_color = "info"
             else:
                 st.success(f"""
 ## ✅ LOW RISK — LOYAL CUSTOMER
 **Loyalty Score: {100-score}%**
-
 This customer is happy and likely to stay!
                 """)
-                recommendation = "😊 Maintain excellent service — customer is loyal!"
+                recommendation = "😊 Maintain excellent service!"
                 risk_label = "✅ LOW RISK"
-                risk_color = "success"
 
             col1, col2 = st.columns(2)
             col1.metric("Risk Level", risk_label)
             col2.metric("Risk Score", f"{score}/100")
             st.progress(score/100)
 
-            # Explanation
             st.write("---")
             st.subheader("🔍 Why This Prediction?")
             if reasons:
@@ -345,18 +355,15 @@ This customer is happy and likely to stay!
                 for positive in positives:
                     st.write(f"• {positive}")
 
-            # Business Insights
             st.write("---")
             st.subheader("💡 Business Intelligence")
             for insight in insights:
                 st.write(insight)
 
-            # Action
             st.write("---")
             st.subheader("📋 Recommended Action")
             st.write(f"**{recommendation}**")
 
-    # ---- TAB 2 ----
     with tab2:
         st.subheader("📊 Batch Analysis")
         st.write("Predict churn for multiple customers at once!")
@@ -396,13 +403,13 @@ This customer is happy and likely to stay!
                             row["internet_service"]
                         )
                         if score >= 60:
-                            risk = "🔴 HIGH RISK — Will Churn"
+                            risk = "🔴 HIGH RISK"
                         elif score >= 40:
-                            risk = "🟡 MEDIUM RISK — Likely to Churn"
+                            risk = "🟡 MEDIUM RISK"
                         elif score >= 20:
-                            risk = "🔵 LOW-MEDIUM RISK"
+                            risk = "🔵 LOW-MEDIUM"
                         else:
-                            risk = "✅ LOW RISK — Will Stay"
+                            risk = "✅ WILL STAY"
 
                         results.append({
                             "Customer #": idx + 1,
@@ -413,31 +420,19 @@ This customer is happy and likely to stay!
                 results_df = pd.DataFrame(results)
 
                 st.write("---")
-                st.subheader("📈 Analysis Summary")
                 col1, col2, col3, col4 = st.columns(4)
                 col1.metric("Total", len(results_df))
-                col2.metric("🔴 High Risk", len([r for r in results if "HIGH RISK" in r["Prediction"] and "MEDIUM" not in r["Prediction"]]))
+                col2.metric("🔴 High", len([r for r in results if "HIGH" in r["Prediction"]]))
                 col3.metric("🟡 Medium", len([r for r in results if "MEDIUM" in r["Prediction"]]))
-                col4.metric("✅ Safe", len([r for r in results if "Will Stay" in r["Prediction"]]))
+                col4.metric("✅ Safe", len([r for r in results if "STAY" in r["Prediction"]]))
 
-                st.write("---")
-                st.subheader("📊 Risk Distribution")
-                chart_data = pd.Series([r["Prediction"].split("—")[0].strip() for r in results]).value_counts()
-                st.bar_chart(chart_data)
-
-                st.write("---")
-                st.subheader("📋 Full Results")
+                st.bar_chart(pd.Series([r["Prediction"] for r in results]).value_counts())
                 st.dataframe(results_df)
 
                 csv = results_df.to_csv(index=False)
-                st.download_button(
-                    "📥 Download Results",
-                    data=csv,
-                    file_name="churnshield_results.csv",
-                    mime="text/csv"
-                )
+                st.download_button("📥 Download Results", data=csv,
+                                 file_name="churnshield_results.csv", mime="text/csv")
 
-    # ---- TAB 3 ----
     with tab3:
         st.subheader("👤 Customer Loyalty Check")
         st.write("Find out if YOU are likely to leave your provider!")
@@ -476,27 +471,22 @@ This customer is happy and likely to stay!
             tenure = st.slider("📅 Months with provider", 0, 72, 12, key="lt")
             monthly_charges = st.number_input(f"💰 Monthly payment ({currency})",
                                             0.0, 200000.0, 5000.0, key="lc")
-            senior_citizen = st.selectbox("👤 Senior citizen?",
-                                        ["No", "Yes"], key="ls")
+            senior_citizen = st.selectbox("👤 Senior citizen?", ["No", "Yes"], key="ls")
         with col2:
             contract = st.selectbox("📋 Plan type",
-                                  ["Month-to-month", "One year", "Two year"],
-                                  key="lco")
+                                  ["Month-to-month", "One year", "Two year"], key="lco")
             internet_service = st.selectbox("🌐 Internet type",
-                                          ["DSL", "Fiber optic", "No"],
-                                          key="li")
+                                          ["DSL", "Fiber optic", "No"], key="li")
             satisfaction = st.selectbox("😊 How satisfied are you?",
                                       ["Very satisfied", "Satisfied",
-                                       "Neutral", "Unsatisfied",
-                                       "Very unsatisfied"])
+                                       "Neutral", "Unsatisfied", "Very unsatisfied"])
 
         satisfaction_scores = {
             "Very satisfied": -15, "Satisfied": -10,
             "Neutral": 0, "Unsatisfied": 15, "Very unsatisfied": 25
         }
 
-        if st.button("🔍 Check My Loyalty Score",
-                    use_container_width=True, key="loyalty"):
+        if st.button("🔍 Check My Loyalty Score", use_container_width=True, key="loyalty"):
             with st.spinner("🤖 Analyzing your loyalty score..."):
                 score, reasons, positives, _ = predict_churn(
                     tenure, monthly_charges/1000,
@@ -505,40 +495,34 @@ This customer is happy and likely to stay!
             score = min(100, score + satisfaction_scores[satisfaction])
 
             st.write("---")
-
             if score >= 60:
                 st.error(f"""
 ## ⚠️ YOU ARE VERY LIKELY TO LEAVE!
 **Risk Score: {score}/100**
-Our AI predicts you will leave {provider} soon!
                 """)
-                advice = f"Call {provider} NOW and say you're thinking of leaving — they'll offer you a deal!"
+                advice = f"Call {provider} NOW — tell them you're thinking of leaving!"
             elif score >= 40:
                 st.warning(f"""
 ## 🟡 YOU MIGHT LEAVE SOON
 **Risk Score: {score}/100**
-You're showing signs of dissatisfaction!
                 """)
-                advice = f"Ask {provider} for a loyalty discount — you deserve one!"
+                advice = f"Ask {provider} for a loyalty discount!"
             elif score >= 20:
                 st.info(f"""
 ## 🔵 YOU'RE SOMEWHAT SATISFIED
 **Risk Score: {score}/100**
-You're okay but could be happier!
                 """)
-                advice = f"Explore what other {provider} plans are available!"
+                advice = f"Explore other {provider} plans available!"
             else:
                 st.success(f"""
 ## ✅ YOU ARE A LOYAL CUSTOMER!
 **Loyalty Score: {100-score}/100**
-You're happy with {provider}!
                 """)
-                advice = f"Keep enjoying {provider}'s service — you're getting great value!"
+                advice = f"Keep enjoying {provider}'s service!"
 
             st.progress(score/100)
 
             st.write("---")
-            st.subheader("🔍 Why This Result?")
             if reasons:
                 st.write("**⚠️ Risk factors:**")
                 for reason in reasons:
@@ -549,7 +533,6 @@ You're happy with {provider}!
                     st.write(f"• {positive}")
 
             st.write("---")
-            st.subheader("💡 Our Advice")
             st.info(f"💡 {advice}")
 
     st.write("---")
@@ -557,11 +540,190 @@ You're happy with {provider}!
         go_to("models")
 
 # ============================================
-# ROUTER
+# HEARTGUARD PAGE
 # ============================================
-if st.session_state.page == "home":
-    show_home()
-elif st.session_state.page == "models":
-    show_models()
-elif st.session_state.page == "churn":
-    show_churn()
+def show_heart():
+    st.title("❤️ HeartGuard")
+    st.write("**A ShieldAI Product** | Health Risk Prediction Module")
+    st.info("🔬 Powered by SVM | 🎯 86.89% Accuracy | 📊 Trained on Cleveland Heart Disease Dataset")
+    st.write("---")
+
+    st.warning("⚠️ **Medical Disclaimer:** HeartGuard is an AI tool for risk awareness only. Always consult a qualified doctor for medical advice!")
+    st.write("---")
+
+    # Load model
+    with st.spinner("🤖 Loading HeartGuard AI Model..."):
+        model, scaler, accuracy = load_heartguard_model()
+
+    st.success(f"✅ HeartGuard Model Ready! Accuracy: {accuracy}%")
+    st.write("---")
+
+    # Demo button
+    if "heart_demo" not in st.session_state:
+        st.session_state.heart_demo = False
+
+    if st.button("📊 Try Demo Data — High Risk Patient", use_container_width=True):
+        st.session_state.heart_demo = True
+
+    if st.session_state.heart_demo:
+        st.info("✅ Demo data loaded — high risk patient profile!")
+        d_age, d_sex, d_cp = 63, 1, 3
+        d_trestbps, d_chol, d_fbs = 145, 233, 1
+        d_restecg, d_thalach, d_exang = 0, 150, 0
+        d_oldpeak, d_slope, d_ca, d_thal = 2.3, 0, 0, 1
+    else:
+        d_age, d_sex, d_cp = 45, 1, 0
+        d_trestbps, d_chol, d_fbs = 120, 200, 0
+        d_restecg, d_thalach, d_exang = 0, 150, 0
+        d_oldpeak, d_slope, d_ca, d_thal = 1.0, 1, 0, 2
+
+    st.subheader("🏥 Enter Patient Health Details")
+    st.write("---")
+
+    col1, col2 = st.columns(2)
+    with col1:
+        age = st.slider("👤 Age", 20, 80, d_age,
+                       help="Patient's age in years")
+        sex = st.selectbox("⚤ Sex", ["Male", "Female"],
+                          index=0 if d_sex == 1 else 1)
+        cp = st.selectbox("💔 Chest Pain Type", [
+            "0 — Typical Angina",
+            "1 — Atypical Angina",
+            "2 — Non-anginal Pain",
+            "3 — Asymptomatic"
+        ], index=d_cp)
+        trestbps = st.slider("🩺 Resting Blood Pressure (mmHg)", 80, 200, d_trestbps,
+                            help="Resting blood pressure in mmHg")
+        chol = st.slider("🧪 Cholesterol (mg/dl)", 100, 600, d_chol,
+                        help="Serum cholesterol in mg/dl")
+        fbs = st.selectbox("🍬 Fasting Blood Sugar > 120 mg/dl?",
+                          ["No", "Yes"],
+                          index=d_fbs)
+        restecg = st.selectbox("📊 Resting ECG Results", [
+            "0 — Normal",
+            "1 — ST-T Wave Abnormality",
+            "2 — Left Ventricular Hypertrophy"
+        ], index=d_restecg)
+
+    with col2:
+        thalach = st.slider("💓 Max Heart Rate Achieved", 60, 220, d_thalach,
+                           help="Maximum heart rate during exercise")
+        exang = st.selectbox("🏃 Exercise Induced Angina?",
+                            ["No", "Yes"],
+                            index=d_exang)
+        oldpeak = st.slider("📉 ST Depression (oldpeak)", 0.0, 7.0, d_oldpeak, 0.1,
+                           help="ST depression induced by exercise")
+        slope = st.selectbox("📈 Slope of Peak Exercise ST", [
+            "0 — Upsloping",
+            "1 — Flat",
+            "2 — Downsloping"
+        ], index=d_slope)
+        ca = st.selectbox("🔬 Number of Major Vessels (0-3)",
+                         [0, 1, 2, 3], index=d_ca)
+        thal = st.selectbox("🧬 Thalassemia Type", [
+            "0 — Normal",
+            "1 — Fixed Defect",
+            "2 — Reversible Defect",
+            "3 — Unknown"
+        ], index=d_thal)
+
+    # Patient summary
+    st.write("---")
+    st.subheader("👤 Patient Profile Summary")
+    col1, col2, col3, col4 = st.columns(4)
+    col1.metric("Age", f"{age} yrs")
+    col2.metric("Sex", "Male" if d_sex == 1 else "Female")
+    col3.metric("Blood Pressure", f"{trestbps} mmHg")
+    col4.metric("Cholesterol", f"{chol} mg/dl")
+
+    if st.button("❤️ Predict Heart Disease Risk", use_container_width=True):
+        with st.spinner("🤖 AI is analyzing patient health data..."):
+            # Prepare input
+            sex_val = 1 if sex == "Male" else 0
+            cp_val = int(cp.split("—")[0].strip())
+            fbs_val = 1 if fbs == "Yes" else 0
+            restecg_val = int(restecg.split("—")[0].strip())
+            exang_val = 1 if exang == "Yes" else 0
+            slope_val = int(slope.split("—")[0].strip())
+            thal_val = int(thal.split("—")[0].strip())
+
+            features = np.array([[age, sex_val, cp_val, trestbps, chol,
+                                 fbs_val, restecg_val, thalach, exang_val,
+                                 oldpeak, slope_val, ca, thal_val]])
+
+            features_scaled = scaler.transform(features)
+            prediction = model.predict(features_scaled)[0]
+            probability = model.predict_proba(features_scaled)[0]
+            risk_percent = round(probability[1] * 100, 1)
+
+        st.write("---")
+
+        if prediction == 1:
+            st.error(f"""
+## ⚠️ HEART DISEASE RISK DETECTED!
+**Risk Probability: {risk_percent}%**
+Our AI has detected significant indicators of heart disease!
+            """)
+            action = "🚨 **Seek immediate medical attention!** Consult a cardiologist as soon as possible!"
+            risk_label = "🔴 HIGH RISK"
+        else:
+            st.success(f"""
+## ✅ LOW HEART DISEASE RISK
+**Safety Score: {100-risk_percent}%**
+Our AI found no significant indicators of heart disease!
+            """)
+            action = "😊 **Maintain healthy lifestyle!** Regular checkups recommended!"
+            risk_label = "✅ LOW RISK"
+
+        col1, col2 = st.columns(2)
+        col1.metric("Risk Level", risk_label)
+        col2.metric("Risk Probability", f"{risk_percent}%")
+        st.progress(risk_percent/100)
+
+        # Key factors
+        st.write("---")
+        st.subheader("🔍 Key Risk Factors Analyzed")
+
+        factors = []
+        if age > 55:
+            factors.append("👤 Age above 55 — higher risk demographic!")
+        if trestbps > 140:
+            factors.append("🩺 High blood pressure detected!")
+        if chol > 240:
+            factors.append("🧪 High cholesterol levels!")
+        if thalach < 120:
+            factors.append("💓 Low maximum heart rate — concerning sign!")
+        if exang == "Yes":
+            factors.append("🏃 Exercise induced angina detected!")
+        if cp_val == 3:
+            factors.append("💔 Asymptomatic chest pain — high risk indicator!")
+        if oldpeak > 2:
+            factors.append("📉 High ST depression — cardiac stress indicator!")
+
+        if factors:
+            st.write("**⚠️ Risk indicators found:**")
+            for factor in factors:
+                st.write(f"• {factor}")
+        else:
+            st.write("✅ No major risk indicators detected!")
+
+        # Health advice
+        st.write("---")
+        st.subheader("💊 Health Recommendations")
+        st.write(action)
+
+        if prediction == 1:
+            st.write("**Additional steps:**")
+            st.write("• 🏥 Visit a cardiologist immediately")
+            st.write("• 💊 Get a full cardiac workup done")
+            st.write("• 🚫 Avoid strenuous exercise until cleared by doctor")
+            st.write("• 🥗 Start heart-healthy diet immediately")
+        else:
+            st.write("**Maintain your health:**")
+            st.write("• 🏃 Exercise regularly — 30 mins daily")
+            st.write("• 🥗 Eat a balanced heart-healthy diet")
+            st.write("• 🚭 Avoid smoking and limit alcohol")
+            st.write("• 🏥 Annual cardiac checkup recommended")
+
+        st.write("---")
+        st.w
