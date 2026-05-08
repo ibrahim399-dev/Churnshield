@@ -394,7 +394,7 @@ def show_churn():
                 st.write(insight)
 
             st.write("---")
-st.subheader("📋 Recommended Action")
+            st.subheader("📋 Recommended Action")
             st.write(f"**{recommendation}**")
 
             st.write("---")
