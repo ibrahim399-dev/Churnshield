@@ -394,37 +394,37 @@ def show_churn():
                 st.write(insight)
 
             st.write("---")
-            st.subheader("📋 Recommended Action")
-st.write(f"**{recommendation}**")
+st.subheader("📋 Recommended Action")
+            st.write(f"**{recommendation}**")
 
-st.write("---")
-st.subheader("🎯 Retention Strategy")
-if score >= 60:
-    st.write("**Immediate Actions:**")
-    st.write("• 💰 Offer 20-30% loyalty discount immediately")
-    st.write("• 📞 Personal call from customer service within 24hrs")
-    st.write("• 🎁 Free upgrade or bonus data package")
-    st.write("• 📧 Send personalized retention email today")
-    st.write("• 📋 Offer switch to annual contract with benefits")
-elif score >= 40:
-    st.write("**Short-term Actions:**")
-    st.write("• 📧 Send satisfaction survey within 48hrs")
-    st.write("• 💰 Offer 10-15% loyalty discount")
-    st.write("• 🎁 Send loyalty reward or bonus")
-    st.write("• 📞 Schedule follow-up call within a week")
-    st.write("• 📋 Highlight value of upgrading contract")
-elif score >= 20:
-    st.write("**Monitoring Actions:**")
-    st.write("• 📊 Add to monthly monitoring list")
-    st.write("• 📧 Send monthly engagement newsletter")
-    st.write("• 🎁 Include in next loyalty program campaign")
-    st.write("• 👀 Review again in 30 days")
-else:
-    st.write("**Loyalty Maintenance:**")
-    st.write("• 😊 Send appreciation message")
-    st.write("• 🎁 Include in referral program")
-    st.write("• ⭐ Request testimonial or review")
-    st.write("• 📊 Use as benchmark for other customers")
+            st.write("---")
+            st.subheader("🎯 Retention Strategy")
+            if score >= 60:
+                st.write("**Immediate Actions:**")
+                st.write("• 💰 Offer 20-30% loyalty discount immediately")
+                st.write("• 📞 Personal call from customer service within 24hrs")
+                st.write("• 🎁 Free upgrade or bonus data package")
+                st.write("• 📧 Send personalized retention email today")
+                st.write("• 📋 Offer switch to annual contract with benefits")
+            elif score >= 40:
+                st.write("**Short-term Actions:**")
+                st.write("• 📧 Send satisfaction survey within 48hrs")
+                st.write("• 💰 Offer 10-15% loyalty discount")
+                st.write("• 🎁 Send loyalty reward or bonus")
+                st.write("• 📞 Schedule follow-up call within a week")
+                st.write("• 📋 Highlight value of upgrading contract")
+            elif score >= 20:
+                st.write("**Monitoring Actions:**")
+                st.write("• 📊 Add to monthly monitoring list")
+                st.write("• 📧 Send monthly engagement newsletter")
+                st.write("• 🎁 Include in next loyalty program campaign")
+                st.write("• 👀 Review again in 30 days")
+            else:
+                st.write("**Loyalty Maintenance:**")
+                st.write("• 😊 Send appreciation message")
+                st.write("• 🎁 Include in referral program")
+                st.write("• ⭐ Request testimonial or review")
+                st.write("• 📊 Use as benchmark for other customers")
 
     with tab2:
         st.subheader("📊 Batch Analysis")
