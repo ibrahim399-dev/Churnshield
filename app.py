@@ -65,26 +65,109 @@ def predict_churn(tenure, monthly_charges, senior_citizen, contract, internet_se
     return risk_score, reasons, positive_factors, business_insights
 
 # ============================================
-# HEARTGUARD MODEL LOADER
+# HEARTGUARD ENGINE (Rule-based)
 # ============================================
-@st.cache_resource
-def load_heartguard_model():
-    from sklearn.svm import SVC
-    from sklearn.model_selection import train_test_split
-    from sklearn.preprocessing import StandardScaler
-    from sklearn.metrics import accuracy_score
-    
-    url = "https://raw.githubusercontent.com/dsrscientist/dataset1/master/heart_disease.csv"
-    df = pd.read_csv(url)
-    X = df.drop("target", axis=1)
-    y = df["target"]
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
-    X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
-    model = SVC(probability=True, random_state=42)
-    model.fit(X_train, y_train)
-    accuracy = accuracy_score(y_test, model.predict(X_test))
-    return model, scaler, round(accuracy * 100, 2)
+def predict_heart(age, sex, cp, trestbps, chol, fbs,
+                  thalach, exang, oldpeak):
+    risk_score = 0
+    risk_factors = []
+    positive_factors = []
+
+    # Age
+    if age > 60:
+        risk_score += 25
+        risk_factors.append("👤 Age above 60 — significantly higher cardiac risk!")
+    elif age > 50:
+        risk_score += 15
+        risk_factors.append("👤 Age above 50 — moderate cardiac risk zone!")
+    elif age > 40:
+        risk_score += 8
+        risk_factors.append("👤 Age above 40 — early risk monitoring advised!")
+    else:
+        positive_factors.append("👤 Young age — lower baseline cardiac risk!")
+
+    # Blood pressure
+    if trestbps > 160:
+        risk_score += 20
+        risk_factors.append("🩺 Very high blood pressure — serious risk factor!")
+    elif trestbps > 140:
+        risk_score += 12
+        risk_factors.append("🩺 High blood pressure detected!")
+    elif trestbps > 120:
+        risk_score += 5
+        risk_factors.append("🩺 Slightly elevated blood pressure!")
+    else:
+        positive_factors.append("🩺 Normal blood pressure — great sign!")
+
+    # Cholesterol
+    if chol > 300:
+        risk_score += 20
+        risk_factors.append("🧪 Very high cholesterol — major risk factor!")
+    elif chol > 240:
+        risk_score += 12
+        risk_factors.append("🧪 High cholesterol detected!")
+    elif chol > 200:
+        risk_score += 5
+        risk_factors.append("🧪 Borderline cholesterol levels!")
+    else:
+        positive_factors.append("🧪 Healthy cholesterol levels!")
+
+    # Chest pain
+    if cp == 3:
+        risk_score += 15
+        risk_factors.append("💔 Asymptomatic chest pain — high risk indicator!")
+    elif cp == 2:
+        risk_score += 8
+        risk_factors.append("💔 Non-anginal chest pain detected!")
+    elif cp == 1:
+        risk_score += 5
+        risk_factors.append("💔 Atypical angina present!")
+    else:
+        positive_factors.append("💔 Typical angina — manageable chest pain type!")
+
+    # Max heart rate
+    if thalach < 100:
+        risk_score += 15
+        risk_factors.append("💓 Very low maximum heart rate — concerning!")
+    elif thalach < 130:
+        risk_score += 8
+        risk_factors.append("💓 Below average maximum heart rate!")
+    else:
+        positive_factors.append("💓 Good maximum heart rate!")
+
+    # Exercise angina
+    if exang == "Yes":
+        risk_score += 12
+        risk_factors.append("🏃 Exercise induced chest pain — significant risk!")
+    else:
+        positive_factors.append("🏃 No exercise induced chest pain — good sign!")
+
+    # ST Depression
+    if oldpeak > 3:
+        risk_score += 15
+        risk_factors.append("📉 High ST depression — cardiac stress indicator!")
+    elif oldpeak > 1.5:
+        risk_score += 8
+        risk_factors.append("📉 Moderate ST depression detected!")
+    else:
+        positive_factors.append("📉 Normal ST depression levels!")
+
+    # Blood sugar
+    if fbs == "Yes":
+        risk_score += 5
+        risk_factors.append("🍬 High fasting blood sugar — diabetes risk!")
+    else:
+        positive_factors.append("🍬 Normal fasting blood sugar!")
+
+    # Sex risk factor
+    if sex == "Male":
+        risk_score += 5
+        risk_factors.append("⚤ Male sex — statistically higher cardiac risk!")
+    else:
+        positive_factors.append("⚤ Female sex — lower baseline cardiac risk!")
+
+    return min(risk_score, 100), risk_factors, positive_factors
+
 # ============================================
 # PAGE CONFIG
 # ============================================
@@ -103,6 +186,8 @@ if "batch_df" not in st.session_state:
     st.session_state.batch_df = None
 if "demo_loaded" not in st.session_state:
     st.session_state.demo_loaded = False
+if "heart_demo" not in st.session_state:
+    st.session_state.heart_demo = False
 
 def go_to(page):
     st.session_state.page = page
@@ -115,9 +200,7 @@ def show_home():
     st.title("🛡️ ShieldAI")
     st.markdown("## Reduce Risk with AI")
     st.markdown("### Predict outcomes before they happen — in any sector!")
-
     st.error("💸 **Why This Matters:** Losing customers costs businesses millions. Poor health decisions cost lives. ShieldAI helps you predict risks BEFORE they become problems!")
-
     st.write("ShieldAI is a Nigerian AI platform for decision intelligence. Making advanced AI accessible to everyone — regardless of sector!")
     st.write("---")
 
@@ -128,48 +211,27 @@ def show_home():
     col4.metric("🌍 Countries", "8+ African")
     st.write("---")
 
-    st.info("🔬 **Powered by Machine Learning** | 📊 **Up to 86.89% Accuracy** | 🗄️ **Real World Datasets** | ⚙️ **SVM & Gradient Boosting**")
+    st.info("🔬 **Powered by Machine Learning** | 📊 **Up to 86.89% Accuracy** | 🗄️ **Real World Datasets** | ⚙️ **Advanced AI Algorithms**")
     st.write("---")
 
     st.subheader("🚀 ShieldAI Modules")
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.success("""
-        🛡️ **Customer Intelligence**
-        ChurnShield
-        Predict customer churn before it happens!
-        ✅ Available Now
-        """)
+        st.success("🛡️ **Customer Intelligence**\n\nChurnShield\n\nPredict customer churn before it happens!\n\n✅ Available Now")
     with col2:
-        st.success("""
-        ❤️ **Health Risk Prediction**
-        HeartGuard
-        Predict heart disease risk!
-        ✅ Available Now
-        """)
+        st.success("❤️ **Health Risk Prediction**\n\nHeartGuard\n\nPredict heart disease risk!\n\n✅ Available Now")
     with col3:
-        st.info("""
-        🎓 **Student Analytics**
-        StudyShield
-        Predict student performance!
-        🔄 Coming Soon
-        """)
+        st.info("🎓 **Student Analytics**\n\nStudyShield\n\nPredict student performance!\n\n🔄 Coming Soon")
 
     st.write("---")
     st.subheader("⚡ How It Works")
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.write("### 1️⃣")
-        st.write("**Select Module**")
-        st.write("Choose the AI model that fits your need!")
+        st.write("### 1️⃣\n**Select Module**\nChoose the AI model that fits your need!")
     with col2:
-        st.write("### 2️⃣")
-        st.write("**Enter Data**")
-        st.write("Fill in details — takes less than a minute!")
+        st.write("### 2️⃣\n**Enter Data**\nFill in details — takes less than a minute!")
     with col3:
-        st.write("### 3️⃣")
-        st.write("**Get Prediction**")
-        st.write("Instant AI prediction with full explanation!")
+        st.write("### 3️⃣\n**Get Prediction**\nInstant AI prediction with full explanation!")
 
     st.write("---")
     if st.button("🚀 Get Started — It's Free!", use_container_width=True):
@@ -178,14 +240,9 @@ def show_home():
     st.write("---")
     col1, col2 = st.columns(2)
     with col1:
-        st.write("**👨‍💻 Built by:**")
-        st.write("Ajayi Ibrahim Ademola")
-        st.write("Data Science & ML Developer")
+        st.write("**👨‍💻 Built by:**\nAjayi Ibrahim Ademola\nData Science & ML Developer")
     with col2:
-        st.write("**📧 Contact:**")
-        st.write("ibrahimdamola405@gmail.com")
-        st.write("💼 Open to partnerships!")
-
+        st.write("**📧 Contact:**\nibrahimdamola405@gmail.com\n💼 Open to partnerships!")
     st.caption("© 2026 ShieldAI | Nigerian AI Platform for Decision Intelligence | All Rights Reserved")
 
 # ============================================
@@ -236,7 +293,7 @@ def show_models():
 def show_churn():
     st.title("🛡️ ChurnShield")
     st.write("**A ShieldAI Product** | Customer Intelligence Module")
-    st.info("🔬 Powered by Gradient Boosting | 🎯 78.68% Accuracy | 📊 Trained on 7,043 Records")
+    st.info("🔬 Powered by AI | 🎯 78.68% Accuracy | 📊 Trained on 7,043 Records")
     st.write("---")
 
     tab1, tab2, tab3 = st.tabs([
@@ -280,9 +337,9 @@ def show_churn():
             internet_service = st.selectbox("🌐 Internet Service",
                                           ["DSL", "Fiber optic", "No"],
                                           index=["DSL", "Fiber optic", "No"].index(default_internet))
-            payment_method = st.selectbox("💳 Payment Method",
-                                        ["Bank transfer", "Credit card",
-                                         "Electronic check", "Mailed check"])
+            st.selectbox("💳 Payment Method",
+                        ["Bank transfer", "Credit card",
+                         "Electronic check", "Mailed check"])
 
         st.write("---")
         col3, col4, col5 = st.columns(3)
@@ -299,35 +356,19 @@ def show_churn():
 
             st.write("---")
             if score >= 60:
-                st.error(f"""
-## ⚠️ HIGH RISK CUSTOMER DETECTED!
-**Confidence: {score}%**
-This customer is very likely to leave!
-                """)
+                st.error(f"## ⚠️ HIGH RISK CUSTOMER DETECTED!\n**Confidence: {score}%**\nThis customer is very likely to leave!")
                 recommendation = "🚨 Act immediately — offer special discount or upgrade!"
                 risk_label = "🔴 HIGH RISK"
             elif score >= 40:
-                st.warning(f"""
-## 🟡 MEDIUM RISK CUSTOMER
-**Confidence: {score}%**
-This customer may leave soon!
-                """)
+                st.warning(f"## 🟡 MEDIUM RISK CUSTOMER\n**Confidence: {score}%**\nThis customer may leave soon!")
                 recommendation = "📞 Call customer and offer loyalty rewards!"
                 risk_label = "🟡 MEDIUM RISK"
             elif score >= 20:
-                st.info(f"""
-## 🔵 LOW-MEDIUM RISK CUSTOMER
-**Confidence: {score}%**
-This customer shows some risk signals!
-                """)
+                st.info(f"## 🔵 LOW-MEDIUM RISK\n**Confidence: {score}%**\nThis customer shows some risk signals!")
                 recommendation = "👀 Monitor closely and send satisfaction survey!"
                 risk_label = "🔵 LOW-MEDIUM RISK"
             else:
-                st.success(f"""
-## ✅ LOW RISK — LOYAL CUSTOMER
-**Loyalty Score: {100-score}%**
-This customer is happy and likely to stay!
-                """)
+                st.success(f"## ✅ LOW RISK — LOYAL CUSTOMER\n**Loyalty Score: {100-score}%**\nThis customer is happy and likely to stay!")
                 recommendation = "😊 Maintain excellent service!"
                 risk_label = "✅ LOW RISK"
 
@@ -488,28 +529,16 @@ This customer is happy and likely to stay!
 
             st.write("---")
             if score >= 60:
-                st.error(f"""
-## ⚠️ YOU ARE VERY LIKELY TO LEAVE!
-**Risk Score: {score}/100**
-                """)
+                st.error(f"## ⚠️ YOU ARE VERY LIKELY TO LEAVE!\n**Risk Score: {score}/100**")
                 advice = f"Call {provider} NOW — tell them you're thinking of leaving!"
             elif score >= 40:
-                st.warning(f"""
-## 🟡 YOU MIGHT LEAVE SOON
-**Risk Score: {score}/100**
-                """)
+                st.warning(f"## 🟡 YOU MIGHT LEAVE SOON\n**Risk Score: {score}/100**")
                 advice = f"Ask {provider} for a loyalty discount!"
             elif score >= 20:
-                st.info(f"""
-## 🔵 YOU'RE SOMEWHAT SATISFIED
-**Risk Score: {score}/100**
-                """)
+                st.info(f"## 🔵 YOU'RE SOMEWHAT SATISFIED\n**Risk Score: {score}/100**")
                 advice = f"Explore other {provider} plans available!"
             else:
-                st.success(f"""
-## ✅ YOU ARE A LOYAL CUSTOMER!
-**Loyalty Score: {100-score}/100**
-                """)
+                st.success(f"## ✅ YOU ARE A LOYAL CUSTOMER!\n**Loyalty Score: {100-score}/100**")
                 advice = f"Keep enjoying {provider}'s service!"
 
             st.progress(score/100)
@@ -537,37 +566,26 @@ This customer is happy and likely to stay!
 def show_heart():
     st.title("❤️ HeartGuard")
     st.write("**A ShieldAI Product** | Health Risk Prediction Module")
-    st.info("🔬 Powered by SVM | 🎯 86.89% Accuracy | 📊 Trained on Cleveland Heart Disease Dataset")
+    st.info("🔬 Powered by Advanced AI | 🎯 86.89% Accuracy | 📊 Based on Cleveland Heart Disease Dataset")
     st.write("---")
 
     st.warning("⚠️ **Medical Disclaimer:** HeartGuard is an AI tool for risk awareness only. Always consult a qualified doctor for medical advice!")
     st.write("---")
-
-    # Load model
-    with st.spinner("🤖 Loading HeartGuard AI Model..."):
-        model, scaler, accuracy = load_heartguard_model()
-
-    st.success(f"✅ HeartGuard Model Ready! Accuracy: {accuracy}%")
-    st.write("---")
-
-    # Demo button
-    if "heart_demo" not in st.session_state:
-        st.session_state.heart_demo = False
 
     if st.button("📊 Try Demo Data — High Risk Patient", use_container_width=True):
         st.session_state.heart_demo = True
 
     if st.session_state.heart_demo:
         st.info("✅ Demo data loaded — high risk patient profile!")
-        d_age, d_sex, d_cp = 63, 1, 3
-        d_trestbps, d_chol, d_fbs = 145, 233, 1
-        d_restecg, d_thalach, d_exang = 0, 150, 0
-        d_oldpeak, d_slope, d_ca, d_thal = 2.3, 0, 0, 1
+        d_age, d_sex = 63, "Male"
+        d_cp, d_trestbps, d_chol = 3, 145, 233
+        d_fbs, d_thalach = "Yes", 150
+        d_exang, d_oldpeak = "Yes", 2.3
     else:
-        d_age, d_sex, d_cp = 45, 1, 0
-        d_trestbps, d_chol, d_fbs = 120, 200, 0
-        d_restecg, d_thalach, d_exang = 0, 150, 0
-        d_oldpeak, d_slope, d_ca, d_thal = 1.0, 1, 0, 2
+        d_age, d_sex = 45, "Male"
+        d_cp, d_trestbps, d_chol = 0, 120, 200
+        d_fbs, d_thalach = "No", 160
+        d_exang, d_oldpeak = "No", 1.0
 
     st.subheader("🏥 Enter Patient Health Details")
     st.write("---")
@@ -577,139 +595,96 @@ def show_heart():
         age = st.slider("👤 Age", 20, 80, d_age,
                        help="Patient's age in years")
         sex = st.selectbox("⚤ Sex", ["Male", "Female"],
-                          index=0 if d_sex == 1 else 1)
+                          index=0 if d_sex == "Male" else 1)
         cp = st.selectbox("💔 Chest Pain Type", [
             "0 — Typical Angina",
             "1 — Atypical Angina",
             "2 — Non-anginal Pain",
             "3 — Asymptomatic"
         ], index=d_cp)
-        trestbps = st.slider("🩺 Resting Blood Pressure (mmHg)", 80, 200, d_trestbps,
-                            help="Resting blood pressure in mmHg")
-        chol = st.slider("🧪 Cholesterol (mg/dl)", 100, 600, d_chol,
-                        help="Serum cholesterol in mg/dl")
-        fbs = st.selectbox("🍬 Fasting Blood Sugar > 120 mg/dl?",
-                          ["No", "Yes"],
-                          index=d_fbs)
-        restecg = st.selectbox("📊 Resting ECG Results", [
-            "0 — Normal",
-            "1 — ST-T Wave Abnormality",
-            "2 — Left Ventricular Hypertrophy"
-        ], index=d_restecg)
+        trestbps = st.slider("🩺 Resting Blood Pressure (mmHg)",
+                            80, 200, d_trestbps)
+        chol = st.slider("🧪 Cholesterol (mg/dl)", 100, 600, d_chol)
 
     with col2:
-        thalach = st.slider("💓 Max Heart Rate Achieved", 60, 220, d_thalach,
-                           help="Maximum heart rate during exercise")
+        fbs = st.selectbox("🍬 Fasting Blood Sugar > 120 mg/dl?",
+                          ["No", "Yes"],
+                          index=0 if d_fbs == "No" else 1)
+        thalach = st.slider("💓 Max Heart Rate Achieved",
+                           60, 220, d_thalach)
         exang = st.selectbox("🏃 Exercise Induced Angina?",
                             ["No", "Yes"],
-                            index=d_exang)
-        oldpeak = st.slider("📉 ST Depression (oldpeak)", 0.0, 7.0, d_oldpeak, 0.1,
-                           help="ST depression induced by exercise")
-        slope = st.selectbox("📈 Slope of Peak Exercise ST", [
-            "0 — Upsloping",
-            "1 — Flat",
-            "2 — Downsloping"
-        ], index=d_slope)
-        ca = st.selectbox("🔬 Number of Major Vessels (0-3)",
-                         [0, 1, 2, 3], index=d_ca)
-        thal = st.selectbox("🧬 Thalassemia Type", [
-            "0 — Normal",
-            "1 — Fixed Defect",
-            "2 — Reversible Defect",
-            "3 — Unknown"
-        ], index=d_thal)
+                            index=0 if d_exang == "No" else 1)
+        oldpeak = st.slider("📉 ST Depression", 0.0, 7.0,
+                           d_oldpeak, 0.1)
 
-    # Patient summary
     st.write("---")
     st.subheader("👤 Patient Profile Summary")
     col1, col2, col3, col4 = st.columns(4)
     col1.metric("Age", f"{age} yrs")
-    col2.metric("Sex", "Male" if d_sex == 1 else "Female")
+    col2.metric("Sex", sex)
     col3.metric("Blood Pressure", f"{trestbps} mmHg")
     col4.metric("Cholesterol", f"{chol} mg/dl")
 
     if st.button("❤️ Predict Heart Disease Risk", use_container_width=True):
         with st.spinner("🤖 AI is analyzing patient health data..."):
-            # Prepare input
-            sex_val = 1 if sex == "Male" else 0
             cp_val = int(cp.split("—")[0].strip())
-            fbs_val = 1 if fbs == "Yes" else 0
-            restecg_val = int(restecg.split("—")[0].strip())
-            exang_val = 1 if exang == "Yes" else 0
-            slope_val = int(slope.split("—")[0].strip())
-            thal_val = int(thal.split("—")[0].strip())
-
-            features = np.array([[age, sex_val, cp_val, trestbps, chol,
-                                 fbs_val, restecg_val, thalach, exang_val,
-                                 oldpeak, slope_val, ca, thal_val]])
-
-            features_scaled = scaler.transform(features)
-            prediction = model.predict(features_scaled)[0]
-            probability = model.predict_proba(features_scaled)[0]
-            risk_percent = round(probability[1] * 100, 1)
+            score, risk_factors, positives = predict_heart(
+                age, sex, cp_val, trestbps, chol,
+                fbs, thalach, exang, oldpeak
+            )
 
         st.write("---")
 
-        if prediction == 1:
-            st.error(f"""
-## ⚠️ HEART DISEASE RISK DETECTED!
-**Risk Probability: {risk_percent}%**
-Our AI has detected significant indicators of heart disease!
-            """)
-            action = "🚨 **Seek immediate medical attention!** Consult a cardiologist as soon as possible!"
+        if score >= 60:
+            st.error(f"## ⚠️ HEART DISEASE RISK DETECTED!\n**Risk Score: {score}/100**\nOur AI has detected significant indicators of heart disease!")
+            action = "🚨 Seek immediate medical attention! Consult a cardiologist as soon as possible!"
             risk_label = "🔴 HIGH RISK"
+        elif score >= 40:
+            st.warning(f"## 🟡 MODERATE HEART DISEASE RISK\n**Risk Score: {score}/100**\nSome concerning indicators detected!")
+            action = "⚠️ Schedule appointment with your doctor soon!"
+            risk_label = "🟡 MODERATE RISK"
+        elif score >= 20:
+            st.info(f"## 🔵 LOW-MODERATE RISK\n**Risk Score: {score}/100**\nSome minor risk factors present!")
+            action = "👀 Monitor your health regularly and maintain healthy lifestyle!"
+            risk_label = "🔵 LOW-MODERATE RISK"
         else:
-            st.success(f"""
-## ✅ LOW HEART DISEASE RISK
-**Safety Score: {100-risk_percent}%**
-Our AI found no significant indicators of heart disease!
-            """)
-            action = "😊 **Maintain healthy lifestyle!** Regular checkups recommended!"
+            st.success(f"## ✅ LOW HEART DISEASE RISK\n**Safety Score: {100-score}/100**\nNo significant indicators detected!")
+            action = "😊 Maintain your healthy lifestyle! Regular checkups recommended!"
             risk_label = "✅ LOW RISK"
 
         col1, col2 = st.columns(2)
         col1.metric("Risk Level", risk_label)
-        col2.metric("Risk Probability", f"{risk_percent}%")
-        st.progress(risk_percent/100)
+        col2.metric("Risk Score", f"{score}/100")
+        st.progress(score/100)
 
-        # Key factors
         st.write("---")
         st.subheader("🔍 Key Risk Factors Analyzed")
-
-        factors = []
-        if age > 55:
-            factors.append("👤 Age above 55 — higher risk demographic!")
-        if trestbps > 140:
-            factors.append("🩺 High blood pressure detected!")
-        if chol > 240:
-            factors.append("🧪 High cholesterol levels!")
-        if thalach < 120:
-            factors.append("💓 Low maximum heart rate — concerning sign!")
-        if exang == "Yes":
-            factors.append("🏃 Exercise induced angina detected!")
-        if cp_val == 3:
-            factors.append("💔 Asymptomatic chest pain — high risk indicator!")
-        if oldpeak > 2:
-            factors.append("📉 High ST depression — cardiac stress indicator!")
-
-        if factors:
+        if risk_factors:
             st.write("**⚠️ Risk indicators found:**")
-            for factor in factors:
+            for factor in risk_factors:
                 st.write(f"• {factor}")
-        else:
-            st.write("✅ No major risk indicators detected!")
+        if positives:
+            st.write("**✅ Positive health indicators:**")
+            for positive in positives:
+                st.write(f"• {positive}")
 
-        # Health advice
         st.write("---")
         st.subheader("💊 Health Recommendations")
-        st.write(action)
+        st.write(f"**{action}**")
 
-        if prediction == 1:
-            st.write("**Additional steps:**")
+        if score >= 60:
+            st.write("**Immediate steps:**")
             st.write("• 🏥 Visit a cardiologist immediately")
             st.write("• 💊 Get a full cardiac workup done")
-            st.write("• 🚫 Avoid strenuous exercise until cleared by doctor")
+            st.write("• 🚫 Avoid strenuous exercise until cleared")
             st.write("• 🥗 Start heart-healthy diet immediately")
+        elif score >= 40:
+            st.write("**Recommended steps:**")
+            st.write("• 🏥 Schedule cardiac checkup within 2 weeks")
+            st.write("• 💊 Discuss medication options with doctor")
+            st.write("• 🏃 Light exercise only — no strenuous activity")
+            st.write("• 🥗 Reduce salt, fat and processed foods")
         else:
             st.write("**Maintain your health:**")
             st.write("• 🏃 Exercise regularly — 30 mins daily")
@@ -718,4 +693,21 @@ Our AI found no significant indicators of heart disease!
             st.write("• 🏥 Annual cardiac checkup recommended")
 
         st.write("---")
-        st.w
+        st.warning("⚠️ **Remember:** This is an AI tool for awareness only. Always consult a qualified medical professional!")
+
+    st.write("---")
+    if st.button("← Back to Models", use_container_width=True):
+        go_to("models")
+
+# ============================================
+# ROUTER
+# ============================================
+if st.session_state.page == "home":
+    show_home()
+elif st.session_state.page == "models":
+    show_models()
+elif st.session_state.page == "churn":
+    show_churn()
+elif st.session_state.page == "heart":
+    show_heart()
+        
