@@ -11,6 +11,7 @@
 # of Ajayi Ibrahim Ademola. Unauthorized
 # reproduction or distribution is prohibited.
 # ============================================
+
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -78,15 +79,13 @@ def predict_churn(tenure, monthly_charges, senior_citizen, contract, internet_se
     return risk_score, reasons, positive_factors, business_insights
 
 # ============================================
-# HEARTGUARD ENGINE (Rule-based)
+# HEARTGUARD ENGINE
 # ============================================
-def predict_heart(age, sex, cp, trestbps, chol, fbs,
-                  thalach, exang, oldpeak):
+def predict_heart(age, sex, cp, trestbps, chol, fbs, thalach, exang, oldpeak):
     risk_score = 0
     risk_factors = []
     positive_factors = []
 
-    # Age
     if age > 60:
         risk_score += 25
         risk_factors.append("👤 Age above 60 — significantly higher cardiac risk!")
@@ -99,7 +98,6 @@ def predict_heart(age, sex, cp, trestbps, chol, fbs,
     else:
         positive_factors.append("👤 Young age — lower baseline cardiac risk!")
 
-    # Blood pressure
     if trestbps > 160:
         risk_score += 20
         risk_factors.append("🩺 Very high blood pressure — serious risk factor!")
@@ -112,7 +110,6 @@ def predict_heart(age, sex, cp, trestbps, chol, fbs,
     else:
         positive_factors.append("🩺 Normal blood pressure — great sign!")
 
-    # Cholesterol
     if chol > 300:
         risk_score += 20
         risk_factors.append("🧪 Very high cholesterol — major risk factor!")
@@ -125,7 +122,6 @@ def predict_heart(age, sex, cp, trestbps, chol, fbs,
     else:
         positive_factors.append("🧪 Healthy cholesterol levels!")
 
-    # Chest pain
     if cp == 3:
         risk_score += 15
         risk_factors.append("💔 Asymptomatic chest pain — high risk indicator!")
@@ -138,7 +134,6 @@ def predict_heart(age, sex, cp, trestbps, chol, fbs,
     else:
         positive_factors.append("💔 Typical angina — manageable chest pain type!")
 
-    # Max heart rate
     if thalach < 100:
         risk_score += 15
         risk_factors.append("💓 Very low maximum heart rate — concerning!")
@@ -148,14 +143,12 @@ def predict_heart(age, sex, cp, trestbps, chol, fbs,
     else:
         positive_factors.append("💓 Good maximum heart rate!")
 
-    # Exercise angina
     if exang == "Yes":
         risk_score += 12
         risk_factors.append("🏃 Exercise induced chest pain — significant risk!")
     else:
         positive_factors.append("🏃 No exercise induced chest pain — good sign!")
 
-    # ST Depression
     if oldpeak > 3:
         risk_score += 15
         risk_factors.append("📉 High ST depression — cardiac stress indicator!")
@@ -165,14 +158,12 @@ def predict_heart(age, sex, cp, trestbps, chol, fbs,
     else:
         positive_factors.append("📉 Normal ST depression levels!")
 
-    # Blood sugar
     if fbs == "Yes":
         risk_score += 5
         risk_factors.append("🍬 High fasting blood sugar — diabetes risk!")
     else:
         positive_factors.append("🍬 Normal fasting blood sugar!")
 
-    # Sex risk factor
     if sex == "Male":
         risk_score += 5
         risk_factors.append("⚤ Male sex — statistically higher cardiac risk!")
@@ -185,7 +176,7 @@ def predict_heart(age, sex, cp, trestbps, chol, fbs,
 # PAGE CONFIG
 # ============================================
 st.set_page_config(
-    page_title="AegisAI— Decision Intelligence Platform",
+    page_title="Aegis AI — Decision Intelligence Platform",
     page_icon="🛡️",
     layout="centered"
 )
@@ -210,10 +201,10 @@ def go_to(page):
 # HOME PAGE
 # ============================================
 def show_home():
-    st.title("🛡️ AegisAI")
+    st.title("🛡️ Aegis AI")
     st.markdown("## Reduce Risk with AI")
-    st.markdown("### Predict outcomes before they happen — in any sector!")
-    st.error("💸 **Why This Matters:** Losing customers costs businesses millions. Poor health decisions cost lives. ShieldAI helps you predict risks BEFORE they become problems!")
+    st.markdown("### Predict. Analyze. Protect.")
+    st.error("💸 **Why This Matters:** Losing customers costs businesses millions. Poor health decisions cost lives. Aegis AI helps you predict risks BEFORE they become problems!")
     st.write("Aegis AI is a Nigerian AI platform for decision intelligence. Making advanced AI accessible to everyone — regardless of sector!")
     st.write("---")
 
@@ -227,7 +218,7 @@ def show_home():
     st.info("🔬 **Powered by Machine Learning** | 📊 **Up to 86.89% Accuracy** | 🗄️ **Real World Datasets** | ⚙️ **Advanced AI Algorithms**")
     st.write("---")
 
-    st.subheader("🚀 ShieldAI Modules")
+    st.subheader("🚀 Aegis AI Modules")
     col1, col2, col3 = st.columns(3)
     with col1:
         st.success("🛡️ **Customer Intelligence**\n\nChurnShield\n\nPredict customer churn before it happens!\n\n✅ Available Now")
@@ -253,7 +244,7 @@ def show_home():
     st.write("---")
     col1, col2 = st.columns(2)
     with col1:
-        st.write("**👨‍💻 Built by:**\nAjayi Ibrahim Ademola\nData Science & ML Developer")
+        st.write("**👨‍💻 Built by:**\nAjayi Ibrahim Ademola\nFounder & Lead Developer, Aegis AI")
     with col2:
         st.write("**📧 Contact:**\nibrahimdamola405@gmail.com\n💼 Open to partnerships!")
     st.caption("© 2026 Aegis AI | Founded by Ajayi Ibrahim Ademola | All Rights Reserved")
@@ -262,7 +253,7 @@ def show_home():
 # MODELS PAGE
 # ============================================
 def show_models():
-    st.title("🛡️ AegisAI")
+    st.title("🛡️ Aegis AI")
     st.subheader("📊 Select Your Module")
     st.write("Choose an AI model to get started!")
     st.write("---")
@@ -305,7 +296,7 @@ def show_models():
 # ============================================
 def show_churn():
     st.title("🛡️ ChurnShield")
-    st.write("**A AegisAI Product** | Customer Intelligence Module")
+    st.write("**An Aegis AI Product** | Customer Intelligence Module")
     st.info("🔬 Powered by AI | 🎯 78.68% Accuracy | 📊 Trained on 7,043 Records")
     st.write("---")
 
@@ -501,27 +492,33 @@ def show_churn():
                 col3.metric("🟡 Medium", len([r for r in results if "MEDIUM" in r["Prediction"]]))
                 col4.metric("✅ Safe", len([r for r in results if "STAY" in r["Prediction"]]))
 
+                st.write("---")
+                st.subheader("📊 Visual Analytics")
                 risk_counts = pd.Series([r["Prediction"] for r in results]).value_counts()
                 col1, col2 = st.columns(2)
                 with col1:
-                st.write("**📊 Risk Distribution**")
-                st.bar_chart(risk_counts)
+                    st.write("**📊 Risk Distribution**")
+                    st.bar_chart(risk_counts)
                 with col2:
-                st.write("**📈 Risk Score Distribution**")
-                scores = [int(r["Risk Score"].split("/")[0]) for r in results]
-                score_data = pd.DataFrame({
-                "Customer": [r["Customer #"] for r in results],
-                "Risk Score": scores
-                }).set_index("Customer")
-                st.line_chart(score_data)
+                    st.write("**📈 Risk Score Distribution**")
+                    scores = [int(r["Risk Score"].split("/")[0]) for r in results]
+                    score_data = pd.DataFrame({
+                        "Customer": [r["Customer #"] for r in results],
+                        "Risk Score": scores
+                    }).set_index("Customer")
+                    st.line_chart(score_data)
+
                 total = len(results)
                 high = len([r for r in results if "HIGH" in r["Prediction"]])
-                st.write(f"⚠️ **{round(high/total*100)}% of your customers are at HIGH risk!**")
+                st.write(f"⚠️ **{round(high/total*100)}% of your customers are at HIGH risk of churning!**")
+
+                st.write("---")
+                st.subheader("📋 Full Results")
                 st.dataframe(results_df)
 
                 csv = results_df.to_csv(index=False)
                 st.download_button("📥 Download Results", data=csv,
-                                 file_name="churnshield_results.csv", mime="text/csv")
+                                 file_name="aegisai_churn_results.csv", mime="text/csv")
 
     with tab3:
         st.subheader("👤 Customer Loyalty Check")
@@ -616,13 +613,12 @@ def show_churn():
     st.write("---")
     if st.button("← Back to Models", use_container_width=True):
         go_to("models")
-
-# ============================================
+        # ============================================
 # HEARTGUARD PAGE
 # ============================================
 def show_heart():
     st.title("❤️ HeartGuard")
-    st.write("**A ShieldAI Product** | Health Risk Prediction Module")
+    st.write("**An Aegis AI Product** | Health Risk Prediction Module")
     st.info("🔬 Powered by Advanced AI | 🎯 86.89% Accuracy | 📊 Based on Cleveland Heart Disease Dataset")
     st.write("---")
 
@@ -649,8 +645,7 @@ def show_heart():
 
     col1, col2 = st.columns(2)
     with col1:
-        age = st.slider("👤 Age", 20, 80, d_age,
-                       help="Patient's age in years")
+        age = st.slider("👤 Age", 20, 80, d_age)
         sex = st.selectbox("⚤ Sex", ["Male", "Female"],
                           index=0 if d_sex == "Male" else 1)
         cp = st.selectbox("💔 Chest Pain Type", [
@@ -659,21 +654,18 @@ def show_heart():
             "2 — Non-anginal Pain",
             "3 — Asymptomatic"
         ], index=d_cp)
-        trestbps = st.slider("🩺 Resting Blood Pressure (mmHg)",
-                            80, 200, d_trestbps)
+        trestbps = st.slider("🩺 Resting Blood Pressure (mmHg)", 80, 200, d_trestbps)
         chol = st.slider("🧪 Cholesterol (mg/dl)", 100, 600, d_chol)
 
     with col2:
         fbs = st.selectbox("🍬 Fasting Blood Sugar > 120 mg/dl?",
                           ["No", "Yes"],
                           index=0 if d_fbs == "No" else 1)
-        thalach = st.slider("💓 Max Heart Rate Achieved",
-                           60, 220, d_thalach)
+        thalach = st.slider("💓 Max Heart Rate Achieved", 60, 220, d_thalach)
         exang = st.selectbox("🏃 Exercise Induced Angina?",
                             ["No", "Yes"],
                             index=0 if d_exang == "No" else 1)
-        oldpeak = st.slider("📉 ST Depression", 0.0, 7.0,
-                           d_oldpeak, 0.1)
+        oldpeak = st.slider("📉 ST Depression", 0.0, 7.0, d_oldpeak, 0.1)
 
     st.write("---")
     st.subheader("👤 Patient Profile Summary")
@@ -767,4 +759,3 @@ elif st.session_state.page == "churn":
     show_churn()
 elif st.session_state.page == "heart":
     show_heart()
-        
