@@ -1,3 +1,16 @@
+# ============================================
+# AEGIS AI — Decision Intelligence Platform
+# ============================================
+# Founder & Lead Developer: Ajayi Ibrahim Ademola
+# Founded: 2026
+# GitHub: github.com/ibrahim399-dev
+# Email: ibrahimdamola405@gmail.com
+#
+# © 2026 Aegis AI. All Rights Reserved.
+# This software is the intellectual property
+# of Ajayi Ibrahim Ademola. Unauthorized
+# reproduction or distribution is prohibited.
+# ============================================
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -172,7 +185,7 @@ def predict_heart(age, sex, cp, trestbps, chol, fbs,
 # PAGE CONFIG
 # ============================================
 st.set_page_config(
-    page_title="ShieldAI — Decision Intelligence Platform",
+    page_title="AegisAI— Decision Intelligence Platform",
     page_icon="🛡️",
     layout="centered"
 )
@@ -197,11 +210,11 @@ def go_to(page):
 # HOME PAGE
 # ============================================
 def show_home():
-    st.title("🛡️ ShieldAI")
+    st.title("🛡️ AegisAI")
     st.markdown("## Reduce Risk with AI")
     st.markdown("### Predict outcomes before they happen — in any sector!")
     st.error("💸 **Why This Matters:** Losing customers costs businesses millions. Poor health decisions cost lives. ShieldAI helps you predict risks BEFORE they become problems!")
-    st.write("ShieldAI is a Nigerian AI platform for decision intelligence. Making advanced AI accessible to everyone — regardless of sector!")
+    st.write("Aegis AI is a Nigerian AI platform for decision intelligence. Making advanced AI accessible to everyone — regardless of sector!")
     st.write("---")
 
     col1, col2, col3, col4 = st.columns(4)
@@ -243,13 +256,13 @@ def show_home():
         st.write("**👨‍💻 Built by:**\nAjayi Ibrahim Ademola\nData Science & ML Developer")
     with col2:
         st.write("**📧 Contact:**\nibrahimdamola405@gmail.com\n💼 Open to partnerships!")
-    st.caption("© 2026 ShieldAI | Nigerian AI Platform for Decision Intelligence | All Rights Reserved")
+    st.caption("© 2026 Aegis AI | Founded by Ajayi Ibrahim Ademola | All Rights Reserved")
 
 # ============================================
 # MODELS PAGE
 # ============================================
 def show_models():
-    st.title("🛡️ ShieldAI")
+    st.title("🛡️ AegisAI")
     st.subheader("📊 Select Your Module")
     st.write("Choose an AI model to get started!")
     st.write("---")
@@ -292,7 +305,7 @@ def show_models():
 # ============================================
 def show_churn():
     st.title("🛡️ ChurnShield")
-    st.write("**A ShieldAI Product** | Customer Intelligence Module")
+    st.write("**A AegisAI Product** | Customer Intelligence Module")
     st.info("🔬 Powered by AI | 🎯 78.68% Accuracy | 📊 Trained on 7,043 Records")
     st.write("---")
 
