@@ -1,5 +1,5 @@
 # 🛡️ ChurnShield-NG
-### A ShieldAI Product | Customer Intelligence Module
+### A AegisAI Product | Customer Intelligence Module
 
 > **Predict which customers will leave — before they do.**
 
@@ -29,7 +29,7 @@
 ## 📌 About
 ChurnShield-NG is an AI-powered customer churn prediction platform built for African businesses. It helps telecom companies and service providers identify high-risk customers before they leave — enabling proactive retention strategies.
 
-This is a product of **ShieldAI** — a Nigerian AI platform for decision intelligence, making advanced AI accessible to everyone regardless of sector.
+This is a product of **AegisAI** — a Nigerian AI platform for decision intelligence, making advanced AI accessible to everyone regardless of sector.
 
 ---
 
