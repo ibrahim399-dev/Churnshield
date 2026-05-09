@@ -501,7 +501,22 @@ def show_churn():
                 col3.metric("🟡 Medium", len([r for r in results if "MEDIUM" in r["Prediction"]]))
                 col4.metric("✅ Safe", len([r for r in results if "STAY" in r["Prediction"]]))
 
-                st.bar_chart(pd.Series([r["Prediction"] for r in results]).value_counts())
+                risk_counts = pd.Series([r["Prediction"] for r in results]).value_counts()
+col1, col2 = st.columns(2)
+with col1:
+    st.write("**📊 Risk Distribution**")
+    st.bar_chart(risk_counts)
+with col2:
+    st.write("**📈 Risk Score Distribution**")
+    scores = [int(r["Risk Score"].split("/")[0]) for r in results]
+    score_data = pd.DataFrame({
+        "Customer": [r["Customer #"] for r in results],
+        "Risk Score": scores
+    }).set_index("Customer")
+    st.line_chart(score_data)
+total = len(results)
+high = len([r for r in results if "HIGH" in r["Prediction"]])
+st.write(f"⚠️ **{round(high/total*100)}% of your customers are at HIGH risk!**")
                 st.dataframe(results_df)
 
                 csv = results_df.to_csv(index=False)
