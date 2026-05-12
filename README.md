@@ -1,7 +1,7 @@
-# 🛡️ ChurnShield-NG
-### A AegisAI Product | Customer Intelligence Module
+# 🛡️ Aegis AI — Decision Intelligence Platform
+### Predict. Analyze. Protect.
 
-> **Predict which customers will leave — before they do.**
+> **Making advanced AI accessible to everyone — regardless of sector!**
 
 [
 
@@ -18,56 +18,81 @@
 ![Streamlit](https://img.shields.io/badge/Built%20with-Streamlit-red)
 
 ](https://streamlit.io)
+[
+
+![Status](https://img.shields.io/badge/Status-Live-success)
+
+](https://churnshield-ng.streamlit.app/)
 
 ---
 
 ## 🌍 Live Demo
-**[👉 Try ChurnShield-NG Live](https://churnshield-ng.streamlit.app/)**
+**[👉 Try Aegis AI Live](https://churnshield-ng.streamlit.app/)**
 
 ---
 
-## 📌 About
-ChurnShield-NG is an AI-powered customer churn prediction platform built for African businesses. It helps telecom companies and service providers identify high-risk customers before they leave — enabling proactive retention strategies.
+## 📌 About Aegis AI
+Aegis AI is a Nigerian AI platform for decision intelligence. We build AI-powered prediction tools that help businesses and individuals make smarter decisions — across multiple sectors.
 
-This is a product of **AegisAI** — a Nigerian AI platform for decision intelligence, making advanced AI accessible to everyone regardless of sector.
-
----
-
-## 🚀 Features
-
-### 🏢 Business Mode — Single Prediction
-- Enter individual customer details
-- Get instant churn risk prediction
-- View confidence score and risk level
-- Receive AI-powered business insights
-- Get specific retention recommendations
-
-### 📊 Business Analytics — Batch Prediction
-- Upload CSV file with multiple customers
-- Predict churn for thousands at once
-- View risk distribution charts
-- Download results as CSV report
-
-### 👤 Customer Mode — Loyalty Check
-- Customers check their own loyalty score
-- Supports 8 African countries
-- Country-specific telecom providers
-- Local currency support (₦, GH₵, KSh, R)
-- Personalized retention advice
+**Founded by:** Ajayi Ibrahim Ademola
+**Mission:** Making advanced AI accessible to everyone in Africa and beyond!
 
 ---
 
-## 🌍 Supported Countries & Providers
+## 🚀 Current Modules
 
-| Country | Providers |
-|---------|-----------|
+### 🛡️ ChurnShield — Customer Intelligence
+Predict which customers will leave before they do!
+
+**Features:**
+- Single customer churn prediction
+- Batch prediction — upload CSV of thousands of customers
+- Customer loyalty check — 8 African countries
+- Business intelligence insights
+- Retention strategy recommendations
+- Visual analytics — charts and graphs
+- Download results as CSV
+
+**Accuracy:** 78.68% | **Dataset:** 7,043 records
+
+---
+
+### ❤️ HeartGuard — Health Risk Prediction
+Predict heart disease risk from patient health data!
+
+**Features:**
+- Patient health data analysis
+- Heart disease risk prediction
+- Risk factor identification
+- Health recommendations
+- Medical disclaimer included
+
+**Accuracy:** 86.89% | **Dataset:** Cleveland Heart Disease Dataset
+
+---
+
+### 🎓 StudyShield — Student Analytics *(Coming Soon)*
+Predict student performance and dropout risk!
+
+---
+
+### 💰 LoanShield — Financial Risk *(Coming Soon)*
+Predict loan default risk for financial institutions!
+
+---
+
+## 🌍 Supported Countries
+
+| Country | Providers Supported |
+|---------|-------------------|
 | 🇳🇬 Nigeria | MTN, Airtel, Glo, 9mobile |
 | 🇬🇭 Ghana | MTN, Vodafone, AirtelTigo |
 | 🇰🇪 Kenya | Safaricom, Airtel, Telkom |
 | 🇿🇦 South Africa | Vodacom, MTN, Cell C, Telkom |
 | 🇺🇬 Uganda | MTN, Airtel, Africell |
-| 🇹🇿 Tanzania | Vodacom, Airtel, Tigo |
+| 🇹🇿 Tanzania | Vodacom, Airtel, Tigo, Halotel |
 | 🇷🇼 Rwanda | MTN, Airtel |
+| 🌍 Other African Countries | MTN, Airtel, Vodafone |
 
 ---
 
@@ -80,17 +105,18 @@ This is a product of **AegisAI** — a Nigerian AI platform for decision intelli
 | Pandas | Data manipulation |
 | NumPy | Numerical computing |
 | Scikit-learn | Machine learning algorithms |
-| Gradient Boosting | Churn prediction model |
-| SVM | Heart disease prediction |
+| Gradient Boosting | ChurnShield prediction model |
+| SVM | HeartGuard prediction model |
 
 ---
 
 ## 📊 Model Performance
 
-| Model | Algorithm | Accuracy | Dataset |
-|-------|-----------|----------|---------|
-| ChurnShield | Gradient Boosting | 78.68% | 7,043 records |
-| HeartGuard | SVM | 86.89% | 303 records |
+| Module | Algorithm | Accuracy | Dataset Size |
+|--------|-----------|----------|--------------|
+| 🛡️ ChurnShield | Gradient Boosting | 78.68% | 7,043 records |
+| ❤️ HeartGuard | Support Vector Machine | 86.89% | 303 records |
+| 🎓 StudyShield | In Training | TBA | TBA |
 
 ---
 
