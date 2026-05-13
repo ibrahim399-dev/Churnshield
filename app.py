@@ -518,7 +518,8 @@ def show_models():
             go_to("churn")
 
         st.write("---")
-        st.success("🎓 **
+    if st.button("← Back to Home", use_container_width=True):
+        go_to("home")
                    # ============================================
 # CHURNSHIELD PAGE
 # ============================================
@@ -970,5 +971,176 @@ def show_study():
                                help="How many hours do you sleep per night?")
         distraction = st.slider("📱 Distraction Level (1-10)", 1, 10, 5,
                                help="How distracted are you while studying?")
-        
+        parent_support = st.selectbox("👨‍👩‍👧 Parental Support?", ["Yes", "No"])
+        extra_classes = st.selectbox("📖 Taking Extra Classes?", ["No", "Yes"])
+
+    st.write("---")
+    col1, col2, col3, col4 = st.columns(4)
+    col1.metric("Study Hours", f"{study_hours}hrs/day")
+    col2.metric("Attendance", f"{attendance}%")
+    col3.metric("Past Score", f"{past_score}%")
+    col4.metric("Sleep", f"{sleep_hours}hrs")
+
+    if st.button("🎓 Predict My Performance", use_container_width=True):
+        with st.spinner("🤖 Analyzing your study pattern..."):
+            score, risk_factors, positives, tips = predict_study(
+                study_hours, attendance, assignment,
+                past_score, sleep_hours, distraction,
+                parent_support, extra_classes
+            )
+
+        st.write("---")
+        if score >= 60:
+            st.error(f"## ⚠️ HIGH RISK OF FAILING!\n**Risk Score: {score}/100**\nImmediate action needed!")
+            verdict = "❌ LIKELY TO FAIL"
+        elif score >= 40:
+            st.warning(f"## 🟡 MODERATE RISK\n**Risk Score: {score}/100**\nNeeds improvement!")
+            verdict = "⚠️ AT RISK"
+        elif score >= 20:
+            st.info(f"## 🔵 LOW-MODERATE RISK\n**Risk Score: {score}/100**\nDoing okay but can improve!")
+            verdict = "🔵 AVERAGE"
+        else:
+            st.success(f"## ✅ LOW RISK — LIKELY TO PASS!\n**Success Score: {100-score}/100**\nKeep it up!")
+            verdict = "✅ LIKELY TO PASS"
+
+        col1, col2 = st.columns(2)
+        col1.metric("Verdict", verdict)
+        col2.metric("Risk Score", f"{score}/100")
+        st.progress(score/100)
+
+        st.write("---")
+        st.subheader("🔍 Performance Analysis")
+        if risk_factors:
+            st.write("**⚠️ Risk factors:**")
+            for factor in risk_factors:
+                st.write(f"• {factor}")
+        if positives:
+            st.write("**✅ Positive factors:**")
+            for positive in positives:
+                st.write(f"• {positive}")
+
+        st.write("---")
+        st.subheader("💡 Study Tips & Recommendations")
+        for tip in tips:
+            st.write(tip)
+
+        st.write("---")
+        st.subheader("📊 Key Insight")
+        st.info("🏫 **Attendance is the #1 predictor of passing!** Students who attend regularly are 3x more likely to pass than those who don't!")
+
+    st.write("---")
+    if st.button("← Back to Models", use_container_width=True):
+        go_to("models")
+
+# ============================================
+# CAREERSHIELD PAGE
+# ============================================
+def show_career():
+    st.title("💼 CareerShield")
+    st.write("**An Aegis AI Product** | Career Intelligence Module")
+    st.info("🔬 Powered by AI | 🎯 Career Path Discovery | 📚 JAMB Subject Guide")
+    st.write("---")
+
+    st.subheader("🧠 Discover Your Perfect Career Path")
+    st.write("Answer honestly — our AI will recommend the best career for YOU!")
+    st.write("---")
+
+    col1, col2 = st.columns(2)
+    with col1:
+        loves_numbers = st.selectbox("🔢 Do you love working with numbers?",
+                                    ["No", "Yes"])
+        loves_talking = st.selectbox("🗣️ Do you love talking and communicating?",
+                                    ["No", "Yes"])
+        loves_helping = st.selectbox("🤝 Do you love helping people?",
+                                    ["No", "Yes"])
+        loves_creating = st.selectbox("🎨 Are you creative?",
+                                     ["No", "Yes"])
+        loves_technology = st.selectbox("💻 Do you love technology?",
+                                       ["No", "Yes"])
+
+    with col2:
+        loves_reading = st.selectbox("📚 Do you love reading and research?",
+                                    ["No", "Yes"])
+        works_under_pressure = st.selectbox("⚡ Do you work well under pressure?",
+                                           ["No", "Yes"])
+        leadership = st.selectbox("👑 Are you a natural leader?",
+                                 ["No", "Yes"])
+        financial_goal = st.selectbox("💰 What is your financial goal?",
+                                     ["Stable Income",
+                                      "Very High Income",
+                                      "Moderate Income"])
+        dream_career = st.text_input("✨ What is your dream career? (optional)",
+                                    placeholder="e.g. Doctor, Engineer, Artist...")
+
+    st.write("---")
+
+    if st.button("💼 Discover My Career Path", use_container_width=True):
+        with st.spinner("🤖 Analyzing your profile..."):
+            result = recommend_career(
+                loves_numbers, loves_talking, loves_helping,
+                loves_creating, loves_technology, loves_reading,
+                works_under_pressure, "No", leadership, financial_goal
+            )
+
+        st.write("---")
+        st.subheader("🎯 Your Career Matches")
+
+        medals = ["🥇", "🥈", "🥉"]
+        for i, (career, score) in enumerate(result):
+            st.write(f"### {medals[i]} #{i+1} — {career}")
+            st.write(f"**Match Score: {score}/100**")
+            st.progress(score/100)
+
+            if career in jamb_combinations:
+                info = jamb_combinations[career]
+                col1, col2 = st.columns(2)
+                with col1:
+                    st.write(f"📚 **Course:** {info['course']}")
+                    st.write(f"📝 **JAMB Subjects:**")
+                    for subject in info['subjects']:
+                        st.write(f"  • {subject}")
+                    st.write(f"📊 **Cut off Mark:** {info['cutoff']}")
+                with col2:
+                    st.write(f"🏫 **Top Universities:**")
+                    for uni in info['universities'][:3]:
+                        st.write(f"  • {uni}")
+                    st.write(f"💼 **Job Prospects:** {info['job_prospects']}")
+                    st.write(f"💰 **Salary Range:** {info['salary_range']}")
+            st.write("---")
+
+        # Show dream career advice
+        if dream_career:
+            st.subheader(f"✨ About Your Dream Career: {dream_career}")
+            st.info(f"💡 Your dream of becoming a **{dream_career}** is valid! Compare it with our AI recommendations above and see which path aligns best with your strengths!")
+
+        st.write("---")
+        st.subheader("💡 Career Advice")
+        st.write("• 🎯 Choose a career that matches BOTH your passion AND your strengths!")
+        st.write("• 📚 Research your top career choice deeply before choosing JAMB subjects!")
+        st.write("• 🏫 Visit university websites to confirm exact subject requirements!")
+        st.write("• 👨‍💼 Talk to professionals in your chosen field before deciding!")
+        st.write("• 💪 Remember — any career can be great if you're passionate about it!")
+
+        if result[0][1] < 40:
+            st.warning("⚠️ Your answers suggest you're still exploring! That's perfectly okay — take more time to discover your interests!")
+
+    st.write("---")
+    if st.button("← Back to Models", use_container_width=True):
+        go_to("models")
+
+# ============================================
+# ROUTER
+# ============================================
+if st.session_state.page == "home":
+    show_home()
+elif st.session_state.page == "models":
+    show_models()
+elif st.session_state.page == "churn":
+    show_churn()
+elif st.session_state.page == "heart":
+    show_heart()
+elif st.session_state.page == "study":
+    show_study()
+elif st.session_state.page == "career":
+    show_career()
         
