@@ -516,7 +516,25 @@ def show_models():
         st.write("✅ Live | 🎯 78.68% | 👥 Businesses")
         if st.button("Launch ChurnShield →", use_container_width=True):
             go_to("churn")
+        st.success("🎓 **StudyShield**")
+        st.write("Student performance prediction")
+        st.write("✅ Live | 🎯 91.5% | 👥 Students")
+        if st.button("Launch StudyShield →", use_container_width=True):
+            go_to("study")
 
+    with col2:
+        st.success("❤️ **HeartGuard**")
+        st.write("Heart disease risk prediction")
+        st.write("✅ Live | 🎯 86.89% | 👥 Everyone")
+        if st.button("Launch HeartGuard →", use_container_width=True):
+            go_to("heart")
+
+        st.write("---")
+        st.success("💼 **CareerShield**")
+        st.write("Career path & JAMB guide")
+        st.write("✅ Live | 🎯 AI Powered | 👥 Students")
+        if st.button("Launch CareerShield →", use_container_width=True):
+            go_to("career")
         st.write("---")
     if st.button("← Back to Home", use_container_width=True):
         go_to("home")
