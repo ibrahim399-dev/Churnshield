@@ -1,3 +1,4 @@
+![Aegis AI Logo](logo-header.png)
 # 🛡️ Aegis AI — Decision Intelligence Platform
 ### Predict. Analyze. Protect.
 
