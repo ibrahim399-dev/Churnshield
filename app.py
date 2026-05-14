@@ -8,7 +8,34 @@
 #
 # © 2026 Aegis AI. All Rights Reserved.
 # ============================================
+import requests
+import json
 
+# Supabase Configuration
+SUPABASE_URL = "https://cyrdlpipaqmvirirhnfu.supabase.co"
+SUPABASE_KEY = "sb_publishable_X7xfKtcFe64RWhaKijkeGQ_-VYqC1dA"
+
+def save_prediction(email, model_used, result, risk_score):
+    try:
+        headers = {
+            "apikey": SUPABASE_KEY,
+            "Authorization": f"Bearer {SUPABASE_KEY}",
+            "Content-Type": "application/json"
+        }
+        data = {
+            "email": email,
+            "model_used": model_used,
+            "result": result,
+            "risk_score": risk_score
+        }
+        response = requests.post(
+            f"{SUPABASE_URL}/rest/v1/users_predictions",
+            headers=headers,
+            json=data
+        )
+        return True
+    except:
+        return False
 import streamlit as st
 import pandas as pd
 import numpy as np
