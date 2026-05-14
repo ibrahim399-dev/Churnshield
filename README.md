@@ -1,4 +1,4 @@
-![Aegis AI Logo](logo-header.png)
+![Aegis AI Logo](https://raw.githubusercontent.com/ibrahim399-dev/Churnshield/main/logo-header.png)
 # 🛡️ Aegis AI — Decision Intelligence Platform
 ### Predict. Analyze. Protect.
 
