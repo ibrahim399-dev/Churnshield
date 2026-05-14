@@ -452,7 +452,7 @@ def go_to(page):
 # HOME PAGE
 # ============================================
 def show_home():
-    st.title("🛡️ Aegis AI")
+    st.image("https://raw.githubusercontent.com/ibrahim399-dev/Churnshield/main/logo-header.png", use_column_width=True)
     st.markdown("## Reduce Risk with AI")
     st.markdown("### Predict. Analyze. Protect.")
     st.error("💸 **Why This Matters:** Losing customers costs millions. Poor health decisions cost lives. Wrong career choices waste years. Aegis AI helps you predict risks BEFORE they become problems!")
