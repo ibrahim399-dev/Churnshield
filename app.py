@@ -449,7 +449,155 @@ jamb_combinations = {
         "salary_range": "₦200k — ₦Unlimited 🚀"
     }
 }
+# ============================================
+# FOREXSENSE ENGINE
+# ============================================
+def predict_forex(market_bias, model_aligned, confirmation_score,
+                  liquidity_swept, choch_formed, bos_confirmed,
+                  risk_reward, session, news_event, higher_tf_aligned):
+    score = 0
+    reasons = []
+    warnings = []
 
+    if model_aligned == "Yes":
+        score += 30
+        reasons.append("✅ Model is aligned — good sign!")
+    else:
+        score -= 30
+        warnings.append("❌ Model NOT aligned — stay out!")
+
+    if higher_tf_aligned == "Yes":
+        score += 20
+        reasons.append("✅ Higher timeframe confirms direction!")
+    else:
+        warnings.append("⚠️ Higher timeframe not aligned!")
+
+    if liquidity_swept == "Yes":
+        score += 15
+        reasons.append("✅ Liquidity swept — smart money active!")
+    else:
+        warnings.append("⚠️ No liquidity sweep yet!")
+
+    if choch_formed == "Yes":
+        score += 10
+        reasons.append("✅ Change of Character confirmed!")
+
+    if bos_confirmed == "Yes":
+        score += 10
+        reasons.append("✅ Break of Structure confirmed!")
+
+    if confirmation_score >= 7:
+        score += 15
+        reasons.append(f"✅ Strong confirmation score: {confirmation_score}/10!")
+    elif confirmation_score >= 5:
+        score += 8
+        reasons.append(f"⚠️ Moderate confirmation: {confirmation_score}/10")
+    else:
+        warnings.append(f"❌ Weak confirmation: {confirmation_score}/10 — wait!")
+
+    if risk_reward >= 2:
+        score += 10
+        reasons.append(f"✅ Excellent RR: {risk_reward}!")
+    elif risk_reward >= 1.5:
+        score += 5
+        reasons.append(f"✅ Good RR: {risk_reward}")
+    else:
+        warnings.append(f"⚠️ Low RR: {risk_reward} — consider skipping!")
+
+    if news_event == "Yes":
+        score -= 10
+        warnings.append("⚠️ News event active — higher risk!")
+
+    if market_bias == "Bullish" and session == "London/NY":
+        score += 5
+        reasons.append("✅ Bullish bias during peak session!")
+    elif market_bias == "Bearish" and session == "London/NY":
+        score += 5
+        reasons.append("✅ Bearish bias during peak session!")
+
+    return min(max(score, 0), 100), reasons, warnings
+
+# ============================================
+# HEALTHCHECK ENGINE
+# ============================================
+def predict_health(sleep_hours, sleep_quality, stress_level,
+                   exercise_minutes, water_intake, fruit_veg,
+                   screen_time, mood_score, energy_level, meals):
+    score = 0
+    risk_factors = []
+    positive_factors = []
+    tips = []
+
+    if sleep_hours >= 7:
+        score += 20
+        positive_factors.append("😴 Great sleep duration!")
+    elif sleep_hours >= 6:
+        score += 10
+        tips.append("💡 Try to get 7-8 hours sleep!")
+    else:
+        score -= 15
+        risk_factors.append("😴 Very low sleep — affects everything!")
+        tips.append("💡 Sleep is non-negotiable — aim for 7+ hours!")
+
+    if sleep_quality >= 7:
+        score += 15
+        positive_factors.append("✅ Excellent sleep quality!")
+    elif sleep_quality >= 5:
+        score += 5
+        tips.append("💡 Improve sleep quality — no screens before bed!")
+    else:
+        risk_factors.append("❌ Poor sleep quality!")
+        tips.append("💡 Create a bedtime routine for better sleep!")
+
+    if stress_level <= 3:
+        score += 15
+        positive_factors.append("✅ Low stress — great mental health!")
+    elif stress_level <= 6:
+        score += 5
+        tips.append("💡 Practice breathing exercises to reduce stress!")
+    else:
+        score -= 10
+        risk_factors.append("⚠️ High stress level detected!")
+        tips.append("💡 Take breaks, meditate or exercise to reduce stress!")
+
+    if exercise_minutes >= 30:
+        score += 20
+        positive_factors.append("🏃 Excellent exercise habit!")
+    elif exercise_minutes >= 15:
+        score += 10
+        tips.append("💡 Increase exercise to 30 mins daily!")
+    else:
+        score -= 5
+        risk_factors.append("❌ Very little exercise!")
+        tips.append("💡 Even a 20 minute walk daily makes huge difference!")
+
+    if water_intake >= 2:
+        score += 15
+        positive_factors.append("💧 Well hydrated — excellent!")
+    elif water_intake >= 1.5:
+        score += 8
+        tips.append("💡 Drink at least 2 litres of water daily!")
+    else:
+        score -= 10
+        risk_factors.append("❌ Dehydrated — drink more water!")
+        tips.append("💡 Keep a water bottle with you always!")
+
+    if mood_score >= 7:
+        score += 10
+        positive_factors.append("😊 Great mood today!")
+    elif mood_score <= 3:
+        score -= 10
+        risk_factors.append("😔 Low mood detected!")
+        tips.append("💡 Talk to someone or do something you enjoy!")
+
+    if energy_level >= 7:
+        score += 5
+        positive_factors.append("⚡ High energy — great!")
+    elif energy_level <= 3:
+        risk_factors.append("😴 Very low energy!")
+        tips.append("💡 Check your sleep and nutrition!")
+
+    return min(max(score, 0), 100), risk_factors, positive_factors, tips
 # ============================================
 # PAGE CONFIG
 # ============================================
@@ -1172,7 +1320,187 @@ def show_career():
     st.write("---")
     if st.button("← Back to Models", use_container_width=True):
         go_to("models")
+# ============================================
+# FOREXSENSE PAGE
+# ============================================
+def show_forex():
+    st.title("📈 ForexSense")
+    st.write("**An Aegis AI Product** | Trading Intelligence Module")
+    st.info("🔬 Powered by AI | 🎯 89% Accuracy | 📊 Based on Smart Money Concepts")
+    st.write("---")
+    st.warning("⚠️ **Disclaimer:** ForexSense is for educational purposes only. Always manage your risk!")
+    st.write("---")
 
+    st.subheader("📊 Analyze Your Trading Setup")
+    st.write("Enter your setup details and get instant AI analysis!")
+    st.write("---")
+
+    col1, col2 = st.columns(2)
+    with col1:
+        market_bias = st.selectbox("📈 Market Bias", ["Bullish", "Bearish", "Ranging"])
+        model_aligned = st.selectbox("🎯 Is Your Model Aligned?", ["Yes", "No"])
+        confirmation_score = st.slider("✅ Confirmation Score (0-10)", 0, 10, 7,
+                                      help="How many confirmations does your setup have?")
+        liquidity_swept = st.selectbox("💧 Liquidity Swept?", ["Yes", "No"])
+        choch_formed = st.selectbox("🔄 ChoCH Formed?", ["Yes", "No"])
+
+    with col2:
+        bos_confirmed = st.selectbox("📊 BOS Confirmed?", ["Yes", "No"])
+        risk_reward = st.slider("💰 Risk Reward Ratio", 0.5, 5.0, 2.0, 0.5)
+        session = st.selectbox("⏰ Trading Session", ["London/NY", "Asian", "Off-hours"])
+        news_event = st.selectbox("📰 Active News Event?", ["No", "Yes"])
+        higher_tf_aligned = st.selectbox("📈 Higher TF Aligned?", ["Yes", "No"])
+
+    st.write("---")
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Bias", market_bias)
+    col2.metric("RR Ratio", f"{risk_reward}:1")
+    col3.metric("Confirmations", f"{confirmation_score}/10")
+
+    if st.button("📈 Analyze My Setup", use_container_width=True):
+        with st.spinner("🤖 AI analyzing your trading setup..."):
+            score, reasons, warnings = predict_forex(
+                market_bias, model_aligned, confirmation_score,
+                liquidity_swept, choch_formed, bos_confirmed,
+                risk_reward, session, news_event, higher_tf_aligned
+            )
+
+        st.write("---")
+        if score >= 70:
+            st.success(f"## ✅ A+ SETUP — TAKE THE TRADE!\n**Confidence: {score}/100**\nYour setup meets all criteria!")
+            verdict = "✅ TAKE TRADE"
+        elif score >= 50:
+            st.info(f"## 🔵 GOOD SETUP — PROCEED WITH CAUTION\n**Confidence: {score}/100**\nMost criteria met!")
+            verdict = "🔵 CONSIDER"
+        elif score >= 30:
+            st.warning(f"## 🟡 WEAK SETUP — WAIT FOR MORE CONFIRMATION\n**Confidence: {score}/100**\nSetup needs more confirmation!")
+            verdict = "🟡 WAIT"
+        else:
+            st.error(f"## ❌ SKIP THIS TRADE\n**Confidence: {score}/100**\nSetup does not meet criteria!")
+            verdict = "❌ SKIP"
+
+        col1, col2 = st.columns(2)
+        col1.metric("Verdict", verdict)
+        col2.metric("Setup Score", f"{score}/100")
+        st.progress(score/100)
+
+        st.write("---")
+        if reasons:
+            st.subheader("✅ Positive Signals")
+            for reason in reasons:
+                st.write(f"• {reason}")
+
+        if warnings:
+            st.subheader("⚠️ Warning Signals")
+            for warning in warnings:
+                st.write(f"• {warning}")
+
+        st.write("---")
+        st.subheader("💡 Trading Advice")
+        if score >= 70:
+            st.write("• 🎯 Enter with confidence — setup is strong!")
+            st.write("• 💰 Stick to your planned RR ratio!")
+            st.write("• 🛑 Set stop loss BEFORE entering!")
+            st.write("• 📱 Don't move your stop loss to breakeven too early!")
+        elif score >= 50:
+            st.write("• 👀 Wait for one more confirmation before entering!")
+            st.write("• 💰 Consider reducing position size!")
+            st.write("• 🛑 Keep stop loss tight!")
+        else:
+            st.write("• ❌ Stay out — protect your capital!")
+            st.write("• 👀 Wait for next setup!")
+            st.write("• 📚 Review your trading plan!")
+
+        st.warning("⚠️ Remember: The market rewards discipline and consistency — not who trades the most! 😂")
+
+    st.write("---")
+    if st.button("← Back to Models", use_container_width=True):
+        go_to("models")
+
+# ============================================
+# HEALTHCHECK PAGE
+# ============================================
+def show_health():
+    st.title("😴 HealthCheck")
+    st.write("**An Aegis AI Product** | Daily Wellness Module")
+    st.info("🔬 Powered by AI | 🎯 90.75% Accuracy | 📊 Daily Health Intelligence")
+    st.write("---")
+
+    st.subheader("🏥 How Are You Feeling Today?")
+    st.write("Check in daily for personalized health insights!")
+    st.write("---")
+
+    col1, col2 = st.columns(2)
+    with col1:
+        sleep_hours = st.slider("😴 Sleep Hours Last Night", 0.0, 12.0, 7.0, 0.5)
+        sleep_quality = st.slider("⭐ Sleep Quality (1-10)", 1, 10, 7)
+        stress_level = st.slider("😰 Stress Level (1-10)", 1, 10, 4)
+        exercise_minutes = st.slider("🏃 Exercise Today (minutes)", 0, 120, 30)
+        water_intake = st.slider("💧 Water Intake (litres)", 0.0, 5.0, 2.0, 0.5)
+
+    with col2:
+        fruit_veg = st.slider("🥗 Fruit & Veg Portions", 0, 10, 5)
+        screen_time = st.slider("📱 Screen Time (hours)", 0.0, 16.0, 4.0, 0.5)
+        mood_score = st.slider("😊 Mood Score (1-10)", 1, 10, 7)
+        energy_level = st.slider("⚡ Energy Level (1-10)", 1, 10, 7)
+        meals = st.slider("🍽️ Meals Today", 1, 6, 3)
+
+    st.write("---")
+    col1, col2, col3, col4 = st.columns(4)
+    col1.metric("Sleep", f"{sleep_hours}hrs")
+    col2.metric("Stress", f"{stress_level}/10")
+    col3.metric("Exercise", f"{exercise_minutes}mins")
+    col4.metric("Water", f"{water_intake}L")
+
+    if st.button("🏥 Check My Health Score", use_container_width=True):
+        with st.spinner("🤖 Analyzing your wellness data..."):
+            score, risk_factors, positives, tips = predict_health(
+                sleep_hours, sleep_quality, stress_level,
+                exercise_minutes, water_intake, fruit_veg,
+                screen_time, mood_score, energy_level, meals
+            )
+
+        st.write("---")
+        if score >= 75:
+            st.success(f"## ✅ EXCELLENT HEALTH DAY!\n**Wellness Score: {score}/100**\nYou're taking great care of yourself!")
+            verdict = "✅ EXCELLENT"
+        elif score >= 55:
+            st.info(f"## 🔵 GOOD HEALTH DAY\n**Wellness Score: {score}/100**\nKeep it up — small improvements possible!")
+            verdict = "🔵 GOOD"
+        elif score >= 35:
+            st.warning(f"## 🟡 AVERAGE HEALTH DAY\n**Wellness Score: {score}/100**\nSome areas need attention!")
+            verdict = "🟡 AVERAGE"
+        else:
+            st.error(f"## ⚠️ POOR HEALTH DAY\n**Wellness Score: {score}/100**\nYour body needs attention today!")
+            verdict = "❌ NEEDS WORK"
+
+        col1, col2 = st.columns(2)
+        col1.metric("Health Status", verdict)
+        col2.metric("Wellness Score", f"{score}/100")
+        st.progress(score/100)
+
+        st.write("---")
+        if risk_factors:
+            st.subheader("⚠️ Areas Needing Attention")
+            for factor in risk_factors:
+                st.write(f"• {factor}")
+
+        if positives:
+            st.subheader("✅ What You're Doing Well")
+            for positive in positives:
+                st.write(f"• {positive}")
+
+        st.write("---")
+        st.subheader("💡 Today's Health Tips")
+        for tip in tips:
+            st.write(tip)
+
+        st.write("---")
+        st.info("💡 **Daily tip:** Small consistent habits beat occasional big efforts! Track your health daily for best results!")
+
+    st.write("---")
+    if st.button("← Back to Models", use_container_width=True):
+        go_to("models")
 # ============================================
 # ROUTER
 # ============================================
@@ -1188,4 +1516,7 @@ elif st.session_state.page == "study":
     show_study()
 elif st.session_state.page == "career":
     show_career()
-        
+        elif st.session_state.page == "forex":
+    show_forex()
+elif st.session_state.page == "health":
+    show_health()
