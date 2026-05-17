@@ -1516,7 +1516,7 @@ elif st.session_state.page == "study":
     show_study()
 elif st.session_state.page == "career":
     show_career()
-        elif st.session_state.page == "forex":
+elif st.session_state.page == "forex":
     show_forex()
 elif st.session_state.page == "health":
     show_health()
