@@ -681,7 +681,7 @@ def show_home():
 def show_models():
     st.title("🛡️ Aegis AI")
     st.subheader("📊 Select Your Module")
-    st.write("4 AI models — choose what you need!")
+    st.write("6 AI models — choose what you need!")
     st.write("---")
 
     col1, col2 = st.columns(2)
@@ -711,6 +711,18 @@ def show_models():
         if st.button("Launch CareerShield →", use_container_width=True):
             go_to("career")
         st.write("---")
+        st.success("📈 **ForexSense**")
+        st.write("Trading setup analyzer")
+        st.write("✅ Live | 🎯 89%")
+        if st.button("Launch ForexSense →", use_container_width=True):
+            go_to("forex")
+
+        st.write("---")
+        st.success("😴 **HealthCheck**")
+        st.write("Daily wellness checker")
+        st.write("✅ Live | 🎯 90.75%")
+        if st.button("Launch HealthCheck →", use_container_width=True):
+            go_to("health")
     if st.button("← Back to Home", use_container_width=True):
         go_to("home")
                    # ============================================
