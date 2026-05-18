@@ -673,8 +673,8 @@ col1, col2 = st.columns(2)
 with col1:
         st.write("**👨‍💻 Built by:**\nAjayi Ibrahim Ademola\nFounder & CEO, Aegis AI")
 with col2:
-        st.write("**📧 Contact:**\nibrahimdamola405@gmail.com\n💼 Open to partnerships!")
-    st.caption("© 2026 Aegis AI | Founded by Ajayi Ibrahim Ademola | All Rights Reserved")
+        st.write("**📧 Contact:**\nibrahimdamola405@gmail.com\n💼 Open to partnerships!")   
+st.caption("© 2026 Aegis AI | Founded by Ajayi Ibrahim Ademola | All Rights Reserved")
 
 # ============================================
 # MODELS PAGE
