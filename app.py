@@ -645,7 +645,7 @@ st.write("---")
 st.info("🔬 **Powered by Machine Learning** | 📊 **Up to 91.5% Accuracy** | 🗄️ **Real World Datasets** | ⚙️ **6 AI Models Live!**")
 st.write("---")
 
-    st.subheader("🚀 Aegis AI Modules")
+st.subheader("🚀 Aegis AI Modules")
     col1, col2 = st.columns(2)
     with col1:
         st.success("🛡️ **ChurnShield**\nCustomer churn prediction!\n✅ Live — 78.68% accuracy")
@@ -654,8 +654,8 @@ st.write("---")
         st.success("🎓 **StudyShield**\nStudent performance prediction!\n✅ Live — 91.5% accuracy")
         st.success("💼 **CareerShield**\nCareer path & JAMB guide!\n✅ Live — AI Powered")
 
-    st.write("---")
-    st.subheader("⚡ How It Works")
+st.write("---")
+st.subheader("⚡ How It Works")
     col1, col2, col3 = st.columns(3)
     with col1:
         st.write("### 1️⃣\n**Select Module**\nChoose the AI model!")
