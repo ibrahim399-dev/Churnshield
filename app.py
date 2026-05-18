@@ -679,9 +679,8 @@ def show_home():
 # ============================================
 st.write("6 AI models — choose what you need!")
 st.write("---")
-
-    col1, col2, col3 = st.columns(3)
-    with col1:
+col1, col2, col3 = st.columns(3)
+with col1:
         st.success("🛡️ **ChurnShield**")
         st.write("Customer churn prediction")
         st.write("✅ Live | 🎯 78.68%")
