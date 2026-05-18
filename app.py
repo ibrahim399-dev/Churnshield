@@ -633,7 +633,7 @@ def show_home():
     st.error("💸 **Why This Matters:** Losing customers costs millions. Poor health decisions cost lives. Wrong career choices waste years. Aegis AI helps you predict risks BEFORE they become problems!")
     st.write("Aegis AI is a Nigerian AI platform for decision intelligence. Making advanced AI accessible to everyone — regardless of sector!")
     st.write("---")
-
+col1, col2, col3 = st.columns(3)
     col1.metric("📊 Records", "10,000+")
     col2.metric("🎯 Accuracy", "Up to 91.5%")
     col3.metric("🤖 Models", "6 Live!")
