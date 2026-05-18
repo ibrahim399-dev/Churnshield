@@ -657,11 +657,11 @@ with col2:
 st.write("---")
 st.subheader("⚡ How It Works")
 col1, col2, col3 = st.columns(3)
-    with col1:
+with col1:
         st.write("### 1️⃣\n**Select Module**\nChoose the AI model!")
-    with col2:
+with col2:
         st.write("### 2️⃣\n**Enter Data**\nFill in details!")
-    with col3:
+with col3:
         st.write("### 3️⃣\n**Get Prediction**\nInstant AI result!")
 
     st.write("---")
