@@ -656,7 +656,7 @@ with col2:
 
 st.write("---")
 st.subheader("⚡ How It Works")
-    col1, col2, col3 = st.columns(3)
+col1, col2, col3 = st.columns(3)
     with col1:
         st.write("### 1️⃣\n**Select Module**\nChoose the AI model!")
     with col2:
@@ -669,7 +669,7 @@ st.subheader("⚡ How It Works")
         go_to("models")
 
     st.write("---")
-    col1, col2 = st.columns(2)
+col1, col2 = st.columns(2)
     with col1:
         st.write("**👨‍💻 Built by:**\nAjayi Ibrahim Ademola\nFounder & CEO, Aegis AI")
     with col2:
