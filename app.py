@@ -650,7 +650,7 @@ col1, col2 = st.columns(2)
 with col1:
         st.success("🛡️ **ChurnShield**\nCustomer churn prediction!\n✅ Live — 78.68% accuracy")
         st.success("❤️ **HeartGuard**\nHeart disease risk prediction!\n✅ Live — 86.89% accuracy")
-    with col2:
+with col2:
         st.success("🎓 **StudyShield**\nStudent performance prediction!\n✅ Live — 91.5% accuracy")
         st.success("💼 **CareerShield**\nCareer path & JAMB guide!\n✅ Live — AI Powered")
 
