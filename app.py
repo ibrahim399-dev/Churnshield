@@ -647,7 +647,7 @@ st.write("---")
 
 st.subheader("🚀 Aegis AI Modules")
 col1, col2 = st.columns(2)
-    with col1:
+with col1:
         st.success("🛡️ **ChurnShield**\nCustomer churn prediction!\n✅ Live — 78.68% accuracy")
         st.success("❤️ **HeartGuard**\nHeart disease risk prediction!\n✅ Live — 86.89% accuracy")
     with col2:
