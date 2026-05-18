@@ -701,8 +701,8 @@ with col3:
         if st.button("Launch StudyShield →", use_container_width=True):
             go_to("study")
 
-    st.write("---")
-    col4, col5, col6 = st.columns(3)
+st.write("---")
+col4, col5, col6 = st.columns(3)
 with col4:
         st.success("💼 **CareerShield**")
         st.write("Career path & JAMB guide")
