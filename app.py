@@ -687,14 +687,14 @@ with col1:
         if st.button("Launch ChurnShield →", use_container_width=True):
             go_to("churn")
 
-    with col2:
+with col2:
         st.success("❤️ **HeartGuard**")
         st.write("Heart disease prediction")
         st.write("✅ Live | 🎯 86.89%")
         if st.button("Launch HeartGuard →", use_container_width=True):
             go_to("heart")
 
-    with col3:
+with col3:
         st.success("🎓 **StudyShield**")
         st.write("Student performance")
         st.write("✅ Live | 🎯 91.5%")
@@ -703,28 +703,28 @@ with col1:
 
     st.write("---")
     col4, col5, col6 = st.columns(3)
-    with col4:
+with col4:
         st.success("💼 **CareerShield**")
         st.write("Career path & JAMB guide")
         st.write("✅ Live | 🎯 AI Powered")
         if st.button("Launch CareerShield →", use_container_width=True):
             go_to("career")
 
-    with col5:
+with col5:
         st.success("📈 **ForexSense**")
         st.write("Trading setup analyzer")
         st.write("✅ Live | 🎯 89%")
         if st.button("Launch ForexSense →", use_container_width=True):
             go_to("forex")
 
-    with col6:
+with col6:
         st.success("😴 **HealthCheck**")
         st.write("Daily wellness checker")
         st.write("✅ Live | 🎯 90.75%")
         if st.button("Launch HealthCheck →", use_container_width=True):
             go_to("health")
 
-    st.write("---")
+st.write("---")
     if st.button("← Back to Home", use_container_width=True):
         go_to("home")
                    # ============================================
