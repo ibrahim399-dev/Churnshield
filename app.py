@@ -643,7 +643,7 @@ col4.metric("🌍 Countries", "8+ African")
 
 st.write("---")
 st.info("🔬 **Powered by Machine Learning** | 📊 **Up to 91.5% Accuracy** | 🗄️ **Real World Datasets** | ⚙️ **6 AI Models Live!**")
-    st.write("---")
+st.write("---")
 
     st.subheader("🚀 Aegis AI Modules")
     col1, col2 = st.columns(2)
