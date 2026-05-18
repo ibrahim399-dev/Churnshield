@@ -725,7 +725,7 @@ with col6:
             go_to("health")
 
 st.write("---")
-    if st.button("← Back to Home", use_container_width=True):
+if st.button("← Back to Home", use_container_width=True):
         go_to("home")
                    # ============================================
 # CHURNSHIELD PAGE
