@@ -646,7 +646,7 @@ st.info("🔬 **Powered by Machine Learning** | 📊 **Up to 91.5% Accuracy** | 
 st.write("---")
 
 st.subheader("🚀 Aegis AI Modules")
-    col1, col2 = st.columns(2)
+col1, col2 = st.columns(2)
     with col1:
         st.success("🛡️ **ChurnShield**\nCustomer churn prediction!\n✅ Live — 78.68% accuracy")
         st.success("❤️ **HeartGuard**\nHeart disease risk prediction!\n✅ Live — 86.89% accuracy")
