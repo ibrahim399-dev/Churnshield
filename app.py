@@ -665,7 +665,7 @@ with col3:
         st.write("### 3️⃣\n**Get Prediction**\nInstant AI result!")
 
 st.write("---")
-    if st.button("🚀 Get Started — It's Free!", use_container_width=True):
+if st.button("🚀 Get Started — It's Free!", use_container_width=True):
         go_to("models")
 
 st.write("---")
