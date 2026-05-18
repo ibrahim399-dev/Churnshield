@@ -634,14 +634,13 @@ def show_home():
     st.write("Aegis AI is a Nigerian AI platform for decision intelligence. Making advanced AI accessible to everyone — regardless of sector!")
     st.write("---")
 
-    col1, col2, col3, col4 = st.columns(4)
-    col1.metric("📊 Records", "8,000+")
-    col2.metric("🎯 Accuracy", "Up to 92%")
-    col3.metric("🤖 Models", "4 Live!")
+    col1.metric("📊 Records", "10,000+")
+    col2.metric("🎯 Accuracy", "Up to 91.5%")
+    col3.metric("🤖 Models", "6 Live!")
     col4.metric("🌍 Countries", "8+ African")
     st.write("---")
 
-    st.info("🔬 **Powered by Machine Learning** | 📊 **Up to 91.5% Accuracy** | 🗄️ **Real World Datasets** | ⚙️ **Advanced AI Algorithms**")
+    st.info("🔬 **Powered by Machine Learning** | 📊 **Up to 91.5% Accuracy** | 🗄️ **Real World Datasets** | ⚙️ **6 AI Models Live!**")
     st.write("---")
 
     st.subheader("🚀 Aegis AI Modules")
@@ -678,51 +677,55 @@ def show_home():
 # ============================================
 # MODELS PAGE
 # ============================================
-def show_models():
-    st.title("🛡️ Aegis AI")
-    st.subheader("📊 Select Your Module")
-    st.write("6 AI models — choose what you need!")
+st.write("6 AI models — choose what you need!")
     st.write("---")
 
-    col1, col2 = st.columns(2)
+    col1, col2, col3 = st.columns(3)
     with col1:
         st.success("🛡️ **ChurnShield**")
         st.write("Customer churn prediction")
-        st.write("✅ Live | 🎯 78.68% | 👥 Businesses")
+        st.write("✅ Live | 🎯 78.68%")
         if st.button("Launch ChurnShield →", use_container_width=True):
             go_to("churn")
-        st.success("🎓 **StudyShield**")
-        st.write("Student performance prediction")
-        st.write("✅ Live | 🎯 91.5% | 👥 Students")
-        if st.button("Launch StudyShield →", use_container_width=True):
-            go_to("study")
 
     with col2:
         st.success("❤️ **HeartGuard**")
-        st.write("Heart disease risk prediction")
-        st.write("✅ Live | 🎯 86.89% | 👥 Everyone")
+        st.write("Heart disease prediction")
+        st.write("✅ Live | 🎯 86.89%")
         if st.button("Launch HeartGuard →", use_container_width=True):
             go_to("heart")
 
-        st.write("---")
+    with col3:
+        st.success("🎓 **StudyShield**")
+        st.write("Student performance")
+        st.write("✅ Live | 🎯 91.5%")
+        if st.button("Launch StudyShield →", use_container_width=True):
+            go_to("study")
+
+    st.write("---")
+    col4, col5, col6 = st.columns(3)
+    with col4:
         st.success("💼 **CareerShield**")
         st.write("Career path & JAMB guide")
-        st.write("✅ Live | 🎯 AI Powered | 👥 Students")
+        st.write("✅ Live | 🎯 AI Powered")
         if st.button("Launch CareerShield →", use_container_width=True):
             go_to("career")
-        st.write("---")
+
+    with col5:
         st.success("📈 **ForexSense**")
         st.write("Trading setup analyzer")
         st.write("✅ Live | 🎯 89%")
         if st.button("Launch ForexSense →", use_container_width=True):
             go_to("forex")
 
-        st.write("---")
+    with col6:
         st.success("😴 **HealthCheck**")
         st.write("Daily wellness checker")
         st.write("✅ Live | 🎯 90.75%")
         if st.button("Launch HealthCheck →", use_container_width=True):
             go_to("health")
+
+    st.write("---")
     if st.button("← Back to Home", use_container_width=True):
         go_to("home")
                    # ============================================
