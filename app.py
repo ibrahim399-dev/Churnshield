@@ -678,7 +678,7 @@ def show_home():
 # MODELS PAGE
 # ============================================
 st.write("6 AI models — choose what you need!")
-    st.write("---")
+st.write("---")
 
     col1, col2, col3 = st.columns(3)
     with col1:
