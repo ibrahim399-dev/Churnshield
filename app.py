@@ -664,11 +664,11 @@ with col2:
 with col3:
         st.write("### 3️⃣\n**Get Prediction**\nInstant AI result!")
 
-    st.write("---")
+st.write("---")
     if st.button("🚀 Get Started — It's Free!", use_container_width=True):
         go_to("models")
 
-    st.write("---")
+st.write("---")
 col1, col2 = st.columns(2)
     with col1:
         st.write("**👨‍💻 Built by:**\nAjayi Ibrahim Ademola\nFounder & CEO, Aegis AI")
