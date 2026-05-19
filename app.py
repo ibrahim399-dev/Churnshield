@@ -644,15 +644,17 @@ st.write("---")
 st.info("🔬 **Powered by Machine Learning** | 📊 **Up to 91.5% Accuracy** | 🗄️ **Real World Datasets** | ⚙️ **6 AI Models Live!**")
 st.write("---")
 
-st.subheader("🚀 Aegis AI Modules")
-col1, col2 = st.columns(2)
+st.subheader("🚀 Aegis AI Modules — 6 Live!")
+col1, col2, col3 = st.columns(3)
 with col1:
-        st.success("🛡️ **ChurnShield**\nCustomer churn prediction!\n✅ Live — 78.68% accuracy")
-        st.success("❤️ **HeartGuard**\nHeart disease risk prediction!\n✅ Live — 86.89% accuracy")
+    st.success("🛡️ **ChurnShield**\nCustomer Intelligence\n✅ Live")
+    st.success("💼 **CareerShield**\nCareer & JAMB Guide\n✅ Live")
 with col2:
-        st.success("🎓 **StudyShield**\nStudent performance prediction!\n✅ Live — 91.5% accuracy")
-        st.success("💼 **CareerShield**\nCareer path & JAMB guide!\n✅ Live — AI Powered")
-
+    st.success("❤️ **HeartGuard**\nHealth Prediction\n✅ Live")
+    st.success("📈 **ForexSense**\nTrading Intelligence\n✅ Live")
+with col3:
+    st.success("🎓 **StudyShield**\nStudent Analytics\n✅ Live")
+    st.success("😴 **HealthCheck**\nDaily Wellness\n✅ Live")
 st.write("---")
 st.subheader("⚡ How It Works")
 col1, col2, col3 = st.columns(3)
