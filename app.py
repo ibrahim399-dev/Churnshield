@@ -10,7 +10,10 @@
 # ============================================
 import requests
 import json
-
+import streamlit as st
+import pandas as pd
+import numpy as np
+import io
 # Supabase Configuration
 SUPABASE_URL = "https://cyrdlpipaqmvirirhnfu.supabase.co"
 SUPABASE_KEY = "sb_publishable_X7xfKtcFe64RWhaKijkeGQ_-VYqC1dA"
@@ -36,10 +39,6 @@ def save_prediction(email, model_used, result, risk_score):
         return True
     except:
         return False
-import streamlit as st
-import pandas as pd
-import numpy as np
-import io
 
 # ============================================
 # CHURN PREDICTION ENGINE
