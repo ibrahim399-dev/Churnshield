@@ -5,15 +5,16 @@
 # Founded: 2026
 # GitHub: github.com/ibrahim399-dev
 # Email: ibrahimdamola405@gmail.com
-#
 # © 2026 Aegis AI. All Rights Reserved.
 # ============================================
-import requests
-import json
+
 import streamlit as st
 import pandas as pd
 import numpy as np
 import io
+import requests
+import json
+
 # Supabase Configuration
 SUPABASE_URL = "https://cyrdlpipaqmvirirhnfu.supabase.co"
 SUPABASE_KEY = "sb_publishable_X7xfKtcFe64RWhaKijkeGQ_-VYqC1dA"
@@ -31,7 +32,7 @@ def save_prediction(email, model_used, result, risk_score):
             "result": result,
             "risk_score": risk_score
         }
-        response = requests.post(
+        requests.post(
             f"{SUPABASE_URL}/rest/v1/users_predictions",
             headers=headers,
             json=data
@@ -221,7 +222,7 @@ def predict_study(study_hours, attendance, assignment_completion,
     if attendance < 60:
         risk_score += 35
         risk_factors.append("🏫 Very low attendance — below 60%!")
-        study_tips.append("💡 Attendance is the #1 predictor of passing — attend ALL classes!")
+        study_tips.append("💡 Attendance is the #1 predictor of passing!")
     elif attendance < 75:
         risk_score += 20
         risk_factors.append("🏫 Below average attendance!")
@@ -266,22 +267,22 @@ def predict_study(study_hours, attendance, assignment_completion,
 
     if sleep_hours < 5:
         risk_score += 10
-        risk_factors.append("😴 Very low sleep hours — affects brain performance!")
-        study_tips.append("💡 Sleep at least 7 hours for better memory retention!")
+        risk_factors.append("😴 Very low sleep hours!")
+        study_tips.append("💡 Sleep at least 7 hours for better memory!")
     elif sleep_hours >= 7:
-        positive_factors.append("😴 Good sleep hours — brain is well rested!")
+        positive_factors.append("😴 Good sleep hours!")
 
     if parent_support == "Yes":
         positive_factors.append("👨‍👩‍👧 Good parental support!")
     else:
         risk_score += 5
-        study_tips.append("💡 Talk to your parents or a mentor for guidance!")
+        study_tips.append("💡 Talk to your parents or a mentor!")
 
     if extra_classes == "Yes":
-        positive_factors.append("📖 Taking extra classes — great initiative!")
+        positive_factors.append("📖 Taking extra classes — great!")
     else:
         risk_score += 5
-        study_tips.append("💡 Consider joining extra classes or study groups!")
+        study_tips.append("💡 Consider joining study groups!")
 
     return min(risk_score, 100), risk_factors, positive_factors, study_tips
 
@@ -361,8 +362,7 @@ def recommend_career(loves_numbers, loves_talking, loves_helping,
         scores["Teaching & Education"] += 15
         scores["Engineering"] += 15
 
-    sorted_careers = sorted(scores.items(),
-                           key=lambda x: x[1], reverse=True)
+    sorted_careers = sorted(scores.items(), key=lambda x: x[1], reverse=True)
     return sorted_careers[:3]
 
 # JAMB Combinations
@@ -448,6 +448,7 @@ jamb_combinations = {
         "salary_range": "₦200k — ₦Unlimited 🚀"
     }
 }
+
 # ============================================
 # FOREXSENSE ENGINE
 # ============================================
@@ -487,12 +488,12 @@ def predict_forex(market_bias, model_aligned, confirmation_score,
 
     if confirmation_score >= 7:
         score += 15
-        reasons.append(f"✅ Strong confirmation score: {confirmation_score}/10!")
+        reasons.append(f"✅ Strong confirmation: {confirmation_score}/10!")
     elif confirmation_score >= 5:
         score += 8
         reasons.append(f"⚠️ Moderate confirmation: {confirmation_score}/10")
     else:
-        warnings.append(f"❌ Weak confirmation: {confirmation_score}/10 — wait!")
+        warnings.append(f"❌ Weak confirmation: {confirmation_score}/10!")
 
     if risk_reward >= 2:
         score += 10
@@ -501,7 +502,7 @@ def predict_forex(market_bias, model_aligned, confirmation_score,
         score += 5
         reasons.append(f"✅ Good RR: {risk_reward}")
     else:
-        warnings.append(f"⚠️ Low RR: {risk_reward} — consider skipping!")
+        warnings.append(f"⚠️ Low RR: {risk_reward}!")
 
     if news_event == "Yes":
         score -= 10
@@ -546,18 +547,18 @@ def predict_health(sleep_hours, sleep_quality, stress_level,
         tips.append("💡 Improve sleep quality — no screens before bed!")
     else:
         risk_factors.append("❌ Poor sleep quality!")
-        tips.append("💡 Create a bedtime routine for better sleep!")
+        tips.append("💡 Create a bedtime routine!")
 
     if stress_level <= 3:
         score += 15
         positive_factors.append("✅ Low stress — great mental health!")
     elif stress_level <= 6:
         score += 5
-        tips.append("💡 Practice breathing exercises to reduce stress!")
+        tips.append("💡 Practice breathing exercises!")
     else:
         score -= 10
-        risk_factors.append("⚠️ High stress level detected!")
-        tips.append("💡 Take breaks, meditate or exercise to reduce stress!")
+        risk_factors.append("⚠️ High stress level!")
+        tips.append("💡 Take breaks and meditate!")
 
     if exercise_minutes >= 30:
         score += 20
@@ -568,17 +569,17 @@ def predict_health(sleep_hours, sleep_quality, stress_level,
     else:
         score -= 5
         risk_factors.append("❌ Very little exercise!")
-        tips.append("💡 Even a 20 minute walk daily makes huge difference!")
+        tips.append("💡 Even a 20 minute walk makes huge difference!")
 
     if water_intake >= 2:
         score += 15
-        positive_factors.append("💧 Well hydrated — excellent!")
+        positive_factors.append("💧 Well hydrated!")
     elif water_intake >= 1.5:
         score += 8
-        tips.append("💡 Drink at least 2 litres of water daily!")
+        tips.append("💡 Drink at least 2 litres daily!")
     else:
         score -= 10
-        risk_factors.append("❌ Dehydrated — drink more water!")
+        risk_factors.append("❌ Dehydrated!")
         tips.append("💡 Keep a water bottle with you always!")
 
     if mood_score >= 7:
@@ -591,13 +592,13 @@ def predict_health(sleep_hours, sleep_quality, stress_level,
 
     if energy_level >= 7:
         score += 5
-        positive_factors.append("⚡ High energy — great!")
+        positive_factors.append("⚡ High energy!")
     elif energy_level <= 3:
         risk_factors.append("😴 Very low energy!")
         tips.append("💡 Check your sleep and nutrition!")
 
     return min(max(score, 0), 100), risk_factors, positive_factors, tips
-# ============================================
+                       # ============================================
 # PAGE CONFIG
 # ============================================
 st.set_page_config(
@@ -626,111 +627,118 @@ def go_to(page):
 # HOME PAGE
 # ============================================
 def show_home():
-    st.image("https://raw.githubusercontent.com/ibrahim399-dev/Churnshield/main/logo-header.png", use_column_width=True)
-    st.markdown("## Reduce Risk with AI")
+    st.image("https://raw.githubusercontent.com/ibrahim399-dev/Churnshield/main/logo-header.png",
+             use_column_width=True)
     st.markdown("### Predict. Analyze. Protect.")
     st.error("💸 **Why This Matters:** Losing customers costs millions. Poor health decisions cost lives. Wrong career choices waste years. Aegis AI helps you predict risks BEFORE they become problems!")
     st.write("Aegis AI is a Nigerian AI platform for decision intelligence. Making advanced AI accessible to everyone — regardless of sector!")
     st.write("---")
 
-col1, col2, col3, col4 = st.columns(4)
+    col1, col2, col3, col4 = st.columns(4)
+    col1.metric("📊 Records", "10,000+")
+    col2.metric("🎯 Accuracy", "Up to 91.5%")
+    col3.metric("🤖 Models", "6 Live!")
+    col4.metric("🌍 Countries", "8+ African")
+    st.write("---")
 
-col1.metric("📊 Records", "10,000+")
-col2.metric("🎯 Accuracy", "Up to 91.5%")
-col3.metric("🧠 Models", "6 Live!")
-col4.metric("🌍 Countries", "8+ African")
+    st.info("🔬 **Powered by Machine Learning** | 📊 **Up to 91.5% Accuracy** | 🗄️ **Real World Datasets** | ⚙️ **6 AI Models Live!**")
+    st.write("---")
 
-st.write("---")
-st.info("🔬 **Powered by Machine Learning** | 📊 **Up to 91.5% Accuracy** | 🗄️ **Real World Datasets** | ⚙️ **6 AI Models Live!**")
-st.write("---")
+    st.subheader("🚀 Aegis AI Modules — 6 Live!")
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.success("🛡️ **ChurnShield**\nCustomer Intelligence\n✅ Live — 78.68%")
+        st.write("")
+        st.success("💼 **CareerShield**\nCareer & JAMB Guide\n✅ Live — AI Powered")
+    with col2:
+        st.success("❤️ **HeartGuard**\nHealth Prediction\n✅ Live — 86.89%")
+        st.write("")
+        st.success("📈 **ForexSense**\nTrading Intelligence\n✅ Live — 89%")
+    with col3:
+        st.success("🎓 **StudyShield**\nStudent Analytics\n✅ Live — 91.5%")
+        st.write("")
+        st.success("😴 **HealthCheck**\nDaily Wellness\n✅ Live — 90.75%")
 
-st.subheader("🚀 Aegis AI Modules — 6 Live!")
-col1, col2, col3 = st.columns(3)
-with col1:
-    st.success("🛡️ **ChurnShield**\nCustomer Intelligence\n✅ Live")
-    st.success("💼 **CareerShield**\nCareer & JAMB Guide\n✅ Live")
-with col2:
-    st.success("❤️ **HeartGuard**\nHealth Prediction\n✅ Live")
-    st.success("📈 **ForexSense**\nTrading Intelligence\n✅ Live")
-with col3:
-    st.success("🎓 **StudyShield**\nStudent Analytics\n✅ Live")
-    st.success("😴 **HealthCheck**\nDaily Wellness\n✅ Live")
-st.write("---")
-st.subheader("⚡ How It Works")
-col1, col2, col3 = st.columns(3)
-with col1:
+    st.write("---")
+    st.subheader("⚡ How It Works")
+    col1, col2, col3 = st.columns(3)
+    with col1:
         st.write("### 1️⃣\n**Select Module**\nChoose the AI model!")
-with col2:
+    with col2:
         st.write("### 2️⃣\n**Enter Data**\nFill in details!")
-with col3:
+    with col3:
         st.write("### 3️⃣\n**Get Prediction**\nInstant AI result!")
 
-st.write("---")
-if st.button("🚀 Get Started — It's Free!", use_container_width=True):
+    st.write("---")
+    if st.button("🚀 Get Started — It's Free!", use_container_width=True):
         go_to("models")
 
-st.write("---")
-col1, col2 = st.columns(2)
-with col1:
+    st.write("---")
+    col1, col2 = st.columns(2)
+    with col1:
         st.write("**👨‍💻 Built by:**\nAjayi Ibrahim Ademola\nFounder & CEO, Aegis AI")
-with col2:
-        st.write("**📧 Contact:**\nibrahimdamola405@gmail.com\n💼 Open to partnerships!")   
-st.caption("© 2026 Aegis AI | Founded by Ajayi Ibrahim Ademola | All Rights Reserved")
+    with col2:
+        st.write("**📧 Contact:**\nibrahimdamola405@gmail.com\n💼 Open to partnerships!")
+    st.caption("© 2026 Aegis AI | Founded by Ajayi Ibrahim Ademola | All Rights Reserved")
 
 # ============================================
 # MODELS PAGE
 # ============================================
-st.write("6 AI models — choose what you need!")
-st.write("---")
-col1, col2, col3 = st.columns(3)
-with col1:
+def show_models():
+    st.title("🛡️ Aegis AI")
+    st.subheader("📊 Select Your Module")
+    st.write("6 AI models — choose what you need!")
+    st.write("---")
+
+    col1, col2, col3 = st.columns(3)
+    with col1:
         st.success("🛡️ **ChurnShield**")
         st.write("Customer churn prediction")
         st.write("✅ Live | 🎯 78.68%")
         if st.button("Launch ChurnShield →", use_container_width=True):
             go_to("churn")
 
-with col2:
+    with col2:
         st.success("❤️ **HeartGuard**")
         st.write("Heart disease prediction")
         st.write("✅ Live | 🎯 86.89%")
         if st.button("Launch HeartGuard →", use_container_width=True):
             go_to("heart")
 
-with col3:
+    with col3:
         st.success("🎓 **StudyShield**")
         st.write("Student performance")
         st.write("✅ Live | 🎯 91.5%")
         if st.button("Launch StudyShield →", use_container_width=True):
             go_to("study")
 
-st.write("---")
-col4, col5, col6 = st.columns(3)
-with col4:
+    st.write("---")
+    col4, col5, col6 = st.columns(3)
+    with col4:
         st.success("💼 **CareerShield**")
         st.write("Career path & JAMB guide")
         st.write("✅ Live | 🎯 AI Powered")
         if st.button("Launch CareerShield →", use_container_width=True):
             go_to("career")
 
-with col5:
+    with col5:
         st.success("📈 **ForexSense**")
         st.write("Trading setup analyzer")
         st.write("✅ Live | 🎯 89%")
         if st.button("Launch ForexSense →", use_container_width=True):
             go_to("forex")
 
-with col6:
+    with col6:
         st.success("😴 **HealthCheck**")
         st.write("Daily wellness checker")
         st.write("✅ Live | 🎯 90.75%")
         if st.button("Launch HealthCheck →", use_container_width=True):
             go_to("health")
 
-st.write("---")
-if st.button("← Back to Home", use_container_width=True):
+    st.write("---")
+    if st.button("← Back to Home", use_container_width=True):
         go_to("home")
-                   # ============================================
+        # ============================================
 # CHURNSHIELD PAGE
 # ============================================
 def show_churn():
@@ -780,8 +788,7 @@ def show_churn():
                                           ["DSL", "Fiber optic", "No"],
                                           index=["DSL", "Fiber optic", "No"].index(default_internet))
             st.selectbox("💳 Payment Method",
-                        ["Bank transfer", "Credit card",
-                         "Electronic check", "Mailed check"])
+                        ["Bank transfer", "Credit card", "Electronic check", "Mailed check"])
 
         st.write("---")
         col3, col4, col5 = st.columns(3)
@@ -904,7 +911,6 @@ def show_churn():
                             risk = "🔵 LOW-MEDIUM"
                         else:
                             risk = "✅ WILL STAY"
-
                         results.append({
                             "Customer #": idx + 1,
                             "Risk Score": f"{score}/100",
@@ -941,8 +947,7 @@ def show_churn():
 
                 csv = results_df.to_csv(index=False)
                 st.download_button("📥 Download Results", data=csv,
-                                 file_name="aegisai_churn_results.csv",
-                                 mime="text/csv")
+                                 file_name="aegisai_churn_results.csv", mime="text/csv")
 
     with tab3:
         st.subheader("👤 Customer Loyalty Check")
@@ -996,8 +1001,7 @@ def show_churn():
             "Neutral": 0, "Unsatisfied": 15, "Very unsatisfied": 25
         }
 
-        if st.button("🔍 Check My Loyalty Score",
-                    use_container_width=True, key="loyalty"):
+        if st.button("🔍 Check My Loyalty Score", use_container_width=True, key="loyalty"):
             with st.spinner("🤖 Analyzing loyalty..."):
                 score, reasons, positives, _ = predict_churn(
                     tenure, monthly_charges/1000,
@@ -1047,9 +1051,6 @@ def show_heart():
     st.warning("⚠️ **Medical Disclaimer:** HeartGuard is for awareness only. Always consult a qualified doctor!")
     st.write("---")
 
-    if "heart_demo" not in st.session_state:
-        st.session_state.heart_demo = False
-
     if st.button("📊 Try Demo Data — High Risk Patient", use_container_width=True):
         st.session_state.heart_demo = True
 
@@ -1058,7 +1059,7 @@ def show_heart():
         d_cp, d_trestbps, d_chol = 3, 145, 233
         d_fbs, d_thalach = "Yes", 150
         d_exang, d_oldpeak = "Yes", 2.3
-        st.info("✅ Demo loaded — high risk patient!")
+        st.info("✅ Demo loaded!")
     else:
         d_age, d_sex = 45, "Male"
         d_cp, d_trestbps, d_chol = 0, 120, 200
@@ -1167,20 +1168,13 @@ def show_study():
 
     col1, col2 = st.columns(2)
     with col1:
-        study_hours = st.slider("📚 Study Hours Daily", 0, 12, 3,
-                               help="How many hours do you study per day?")
-        attendance = st.slider("🏫 Attendance Percentage", 0, 100, 75,
-                              help="What percentage of classes do you attend?")
-        assignment = st.slider("📝 Assignment Completion %", 0, 100, 70,
-                              help="What percentage of assignments do you complete?")
-        past_score = st.slider("📊 Past Score Average %", 0, 100, 60,
-                              help="What is your average score in past exams?")
-
+        study_hours = st.slider("📚 Study Hours Daily", 0, 12, 3)
+        attendance = st.slider("🏫 Attendance Percentage", 0, 100, 75)
+        assignment = st.slider("📝 Assignment Completion %", 0, 100, 70)
+        past_score = st.slider("📊 Past Score Average %", 0, 100, 60)
     with col2:
-        sleep_hours = st.slider("😴 Sleep Hours Daily", 3, 12, 7,
-                               help="How many hours do you sleep per night?")
-        distraction = st.slider("📱 Distraction Level (1-10)", 1, 10, 5,
-                               help="How distracted are you while studying?")
+        sleep_hours = st.slider("😴 Sleep Hours Daily", 3, 12, 7)
+        distraction = st.slider("📱 Distraction Level (1-10)", 1, 10, 5)
         parent_support = st.selectbox("👨‍👩‍👧 Parental Support?", ["Yes", "No"])
         extra_classes = st.selectbox("📖 Taking Extra Classes?", ["No", "Yes"])
 
@@ -1201,16 +1195,16 @@ def show_study():
 
         st.write("---")
         if score >= 60:
-            st.error(f"## ⚠️ HIGH RISK OF FAILING!\n**Risk Score: {score}/100**\nImmediate action needed!")
+            st.error(f"## ⚠️ HIGH RISK OF FAILING!\n**Risk Score: {score}/100**")
             verdict = "❌ LIKELY TO FAIL"
         elif score >= 40:
-            st.warning(f"## 🟡 MODERATE RISK\n**Risk Score: {score}/100**\nNeeds improvement!")
+            st.warning(f"## 🟡 MODERATE RISK\n**Risk Score: {score}/100**")
             verdict = "⚠️ AT RISK"
         elif score >= 20:
-            st.info(f"## 🔵 LOW-MODERATE RISK\n**Risk Score: {score}/100**\nDoing okay but can improve!")
+            st.info(f"## 🔵 LOW-MODERATE RISK\n**Risk Score: {score}/100**")
             verdict = "🔵 AVERAGE"
         else:
-            st.success(f"## ✅ LOW RISK — LIKELY TO PASS!\n**Success Score: {100-score}/100**\nKeep it up!")
+            st.success(f"## ✅ LOW RISK — LIKELY TO PASS!\n**Success Score: {100-score}/100**")
             verdict = "✅ LIKELY TO PASS"
 
         col1, col2 = st.columns(2)
@@ -1219,7 +1213,6 @@ def show_study():
         st.progress(score/100)
 
         st.write("---")
-        st.subheader("🔍 Performance Analysis")
         if risk_factors:
             st.write("**⚠️ Risk factors:**")
             for factor in risk_factors:
@@ -1230,13 +1223,11 @@ def show_study():
                 st.write(f"• {positive}")
 
         st.write("---")
-        st.subheader("💡 Study Tips & Recommendations")
+        st.subheader("💡 Study Tips")
         for tip in tips:
             st.write(tip)
 
-        st.write("---")
-        st.subheader("📊 Key Insight")
-        st.info("🏫 **Attendance is the #1 predictor of passing!** Students who attend regularly are 3x more likely to pass than those who don't!")
+        st.info("🏫 **Key Insight:** Attendance is the #1 predictor of passing!")
 
     st.write("---")
     if st.button("← Back to Models", use_container_width=True):
@@ -1257,29 +1248,18 @@ def show_career():
 
     col1, col2 = st.columns(2)
     with col1:
-        loves_numbers = st.selectbox("🔢 Do you love working with numbers?",
-                                    ["No", "Yes"])
-        loves_talking = st.selectbox("🗣️ Do you love talking and communicating?",
-                                    ["No", "Yes"])
-        loves_helping = st.selectbox("🤝 Do you love helping people?",
-                                    ["No", "Yes"])
-        loves_creating = st.selectbox("🎨 Are you creative?",
-                                     ["No", "Yes"])
-        loves_technology = st.selectbox("💻 Do you love technology?",
-                                       ["No", "Yes"])
-
+        loves_numbers = st.selectbox("🔢 Do you love working with numbers?", ["No", "Yes"])
+        loves_talking = st.selectbox("🗣️ Do you love talking and communicating?", ["No", "Yes"])
+        loves_helping = st.selectbox("🤝 Do you love helping people?", ["No", "Yes"])
+        loves_creating = st.selectbox("🎨 Are you creative?", ["No", "Yes"])
+        loves_technology = st.selectbox("💻 Do you love technology?", ["No", "Yes"])
     with col2:
-        loves_reading = st.selectbox("📚 Do you love reading and research?",
-                                    ["No", "Yes"])
-        works_under_pressure = st.selectbox("⚡ Do you work well under pressure?",
-                                           ["No", "Yes"])
-        leadership = st.selectbox("👑 Are you a natural leader?",
-                                 ["No", "Yes"])
+        loves_reading = st.selectbox("📚 Do you love reading and research?", ["No", "Yes"])
+        works_under_pressure = st.selectbox("⚡ Do you work well under pressure?", ["No", "Yes"])
+        leadership = st.selectbox("👑 Are you a natural leader?", ["No", "Yes"])
         financial_goal = st.selectbox("💰 What is your financial goal?",
-                                     ["Stable Income",
-                                      "Very High Income",
-                                      "Moderate Income"])
-        dream_career = st.text_input("✨ What is your dream career? (optional)",
+                                     ["Stable Income", "Very High Income", "Moderate Income"])
+        dream_career = st.text_input("✨ Your dream career? (optional)",
                                     placeholder="e.g. Doctor, Engineer, Artist...")
 
     st.write("---")
@@ -1294,8 +1274,8 @@ def show_career():
 
         st.write("---")
         st.subheader("🎯 Your Career Matches")
-
         medals = ["🥇", "🥈", "🥉"]
+
         for i, (career, score) in enumerate(result):
             st.write(f"### {medals[i]} #{i+1} — {career}")
             st.write(f"**Match Score: {score}/100**")
@@ -1318,25 +1298,22 @@ def show_career():
                     st.write(f"💰 **Salary Range:** {info['salary_range']}")
             st.write("---")
 
-        # Show dream career advice
         if dream_career:
-            st.subheader(f"✨ About Your Dream Career: {dream_career}")
-            st.info(f"💡 Your dream of becoming a **{dream_career}** is valid! Compare it with our AI recommendations above and see which path aligns best with your strengths!")
+            st.subheader(f"✨ About Your Dream: {dream_career}")
+            st.info(f"💡 Your dream of becoming a **{dream_career}** is valid! Compare with our recommendations above!")
 
         st.write("---")
         st.subheader("💡 Career Advice")
-        st.write("• 🎯 Choose a career that matches BOTH your passion AND your strengths!")
-        st.write("• 📚 Research your top career choice deeply before choosing JAMB subjects!")
-        st.write("• 🏫 Visit university websites to confirm exact subject requirements!")
-        st.write("• 👨‍💼 Talk to professionals in your chosen field before deciding!")
-        st.write("• 💪 Remember — any career can be great if you're passionate about it!")
-
-        if result[0][1] < 40:
-            st.warning("⚠️ Your answers suggest you're still exploring! That's perfectly okay — take more time to discover your interests!")
+        st.write("• 🎯 Choose career matching BOTH passion AND strengths!")
+        st.write("• 📚 Research your top choice deeply!")
+        st.write("• 🏫 Visit university websites for exact requirements!")
+        st.write("• 👨‍💼 Talk to professionals in your chosen field!")
+        st.write("• 💪 Any career can be great if you're passionate!")
 
     st.write("---")
     if st.button("← Back to Models", use_container_width=True):
         go_to("models")
+
 # ============================================
 # FOREXSENSE PAGE
 # ============================================
@@ -1349,18 +1326,15 @@ def show_forex():
     st.write("---")
 
     st.subheader("📊 Analyze Your Trading Setup")
-    st.write("Enter your setup details and get instant AI analysis!")
     st.write("---")
 
     col1, col2 = st.columns(2)
     with col1:
         market_bias = st.selectbox("📈 Market Bias", ["Bullish", "Bearish", "Ranging"])
         model_aligned = st.selectbox("🎯 Is Your Model Aligned?", ["Yes", "No"])
-        confirmation_score = st.slider("✅ Confirmation Score (0-10)", 0, 10, 7,
-                                      help="How many confirmations does your setup have?")
+        confirmation_score = st.slider("✅ Confirmation Score (0-10)", 0, 10, 7)
         liquidity_swept = st.selectbox("💧 Liquidity Swept?", ["Yes", "No"])
         choch_formed = st.selectbox("🔄 ChoCH Formed?", ["Yes", "No"])
-
     with col2:
         bos_confirmed = st.selectbox("📊 BOS Confirmed?", ["Yes", "No"])
         risk_reward = st.slider("💰 Risk Reward Ratio", 0.5, 5.0, 2.0, 0.5)
@@ -1384,16 +1358,16 @@ def show_forex():
 
         st.write("---")
         if score >= 70:
-            st.success(f"## ✅ A+ SETUP — TAKE THE TRADE!\n**Confidence: {score}/100**\nYour setup meets all criteria!")
+            st.success(f"## ✅ A+ SETUP — TAKE THE TRADE!\n**Confidence: {score}/100**")
             verdict = "✅ TAKE TRADE"
         elif score >= 50:
-            st.info(f"## 🔵 GOOD SETUP — PROCEED WITH CAUTION\n**Confidence: {score}/100**\nMost criteria met!")
+            st.info(f"## 🔵 GOOD SETUP — PROCEED WITH CAUTION\n**Confidence: {score}/100**")
             verdict = "🔵 CONSIDER"
         elif score >= 30:
-            st.warning(f"## 🟡 WEAK SETUP — WAIT FOR MORE CONFIRMATION\n**Confidence: {score}/100**\nSetup needs more confirmation!")
+            st.warning(f"## 🟡 WEAK SETUP — WAIT\n**Confidence: {score}/100**")
             verdict = "🟡 WAIT"
         else:
-            st.error(f"## ❌ SKIP THIS TRADE\n**Confidence: {score}/100**\nSetup does not meet criteria!")
+            st.error(f"## ❌ SKIP THIS TRADE\n**Confidence: {score}/100**")
             verdict = "❌ SKIP"
 
         col1, col2 = st.columns(2)
@@ -1418,9 +1392,9 @@ def show_forex():
             st.write("• 🎯 Enter with confidence — setup is strong!")
             st.write("• 💰 Stick to your planned RR ratio!")
             st.write("• 🛑 Set stop loss BEFORE entering!")
-            st.write("• 📱 Don't move your stop loss to breakeven too early!")
+            st.write("• 📱 Don't move stop loss too early!")
         elif score >= 50:
-            st.write("• 👀 Wait for one more confirmation before entering!")
+            st.write("• 👀 Wait for one more confirmation!")
             st.write("• 💰 Consider reducing position size!")
             st.write("• 🛑 Keep stop loss tight!")
         else:
@@ -1428,7 +1402,7 @@ def show_forex():
             st.write("• 👀 Wait for next setup!")
             st.write("• 📚 Review your trading plan!")
 
-        st.warning("⚠️ Remember: The market rewards discipline and consistency — not who trades the most! 😂")
+        st.warning("⚠️ The market rewards discipline — not who trades the most! 😂")
 
     st.write("---")
     if st.button("← Back to Models", use_container_width=True):
@@ -1444,17 +1418,15 @@ def show_health():
     st.write("---")
 
     st.subheader("🏥 How Are You Feeling Today?")
-    st.write("Check in daily for personalized health insights!")
     st.write("---")
 
     col1, col2 = st.columns(2)
     with col1:
-        sleep_hours = st.slider("😴 Sleep Hours Last Night", 0.0, 12.0, 7.0, 0.5)
+        sleep_hours = st.slider("😴 Sleep Hours", 0.0, 12.0, 7.0, 0.5)
         sleep_quality = st.slider("⭐ Sleep Quality (1-10)", 1, 10, 7)
         stress_level = st.slider("😰 Stress Level (1-10)", 1, 10, 4)
-        exercise_minutes = st.slider("🏃 Exercise Today (minutes)", 0, 120, 30)
+        exercise_minutes = st.slider("🏃 Exercise (minutes)", 0, 120, 30)
         water_intake = st.slider("💧 Water Intake (litres)", 0.0, 5.0, 2.0, 0.5)
-
     with col2:
         fruit_veg = st.slider("🥗 Fruit & Veg Portions", 0, 10, 5)
         screen_time = st.slider("📱 Screen Time (hours)", 0.0, 16.0, 4.0, 0.5)
@@ -1470,7 +1442,7 @@ def show_health():
     col4.metric("Water", f"{water_intake}L")
 
     if st.button("🏥 Check My Health Score", use_container_width=True):
-        with st.spinner("🤖 Analyzing your wellness data..."):
+        with st.spinner("🤖 Analyzing your wellness..."):
             score, risk_factors, positives, tips = predict_health(
                 sleep_hours, sleep_quality, stress_level,
                 exercise_minutes, water_intake, fruit_veg,
@@ -1479,16 +1451,16 @@ def show_health():
 
         st.write("---")
         if score >= 75:
-            st.success(f"## ✅ EXCELLENT HEALTH DAY!\n**Wellness Score: {score}/100**\nYou're taking great care of yourself!")
+            st.success(f"## ✅ EXCELLENT HEALTH DAY!\n**Wellness Score: {score}/100**")
             verdict = "✅ EXCELLENT"
         elif score >= 55:
-            st.info(f"## 🔵 GOOD HEALTH DAY\n**Wellness Score: {score}/100**\nKeep it up — small improvements possible!")
+            st.info(f"## 🔵 GOOD HEALTH DAY\n**Wellness Score: {score}/100**")
             verdict = "🔵 GOOD"
         elif score >= 35:
-            st.warning(f"## 🟡 AVERAGE HEALTH DAY\n**Wellness Score: {score}/100**\nSome areas need attention!")
+            st.warning(f"## 🟡 AVERAGE HEALTH DAY\n**Wellness Score: {score}/100**")
             verdict = "🟡 AVERAGE"
         else:
-            st.error(f"## ⚠️ POOR HEALTH DAY\n**Wellness Score: {score}/100**\nYour body needs attention today!")
+            st.error(f"## ⚠️ POOR HEALTH DAY\n**Wellness Score: {score}/100**")
             verdict = "❌ NEEDS WORK"
 
         col1, col2 = st.columns(2)
@@ -1501,7 +1473,6 @@ def show_health():
             st.subheader("⚠️ Areas Needing Attention")
             for factor in risk_factors:
                 st.write(f"• {factor}")
-
         if positives:
             st.subheader("✅ What You're Doing Well")
             for positive in positives:
@@ -1512,13 +1483,12 @@ def show_health():
         for tip in tips:
             st.write(tip)
 
-        st.write("---")
-        st.info("💡 **Daily tip:** Small consistent habits beat occasional big efforts! Track your health daily for best results!")
+        st.info("💡 Small consistent habits beat occasional big efforts!")
 
     st.write("---")
     if st.button("← Back to Models", use_container_width=True):
         go_to("models")
-# ============================================
+       # ============================================
 # ROUTER
 # ============================================
 if st.session_state.page == "home":
@@ -1536,4 +1506,5 @@ elif st.session_state.page == "career":
 elif st.session_state.page == "forex":
     show_forex()
 elif st.session_state.page == "health":
-    show_health()
+    show_health() 
+                       
