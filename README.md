@@ -1,4 +1,7 @@
 ![Aegis AI Logo](https://raw.githubusercontent.com/ibrahim399-dev/Churnshield/main/logo-header.png)
+
+
+
 # 🛡️ Aegis AI — Decision Intelligence Platform
 ### Predict. Analyze. Protect.
 
@@ -21,6 +24,11 @@
 ](https://streamlit.io)
 [
 
+![Models](https://img.shields.io/badge/AI%20Models-6%20Live-success)
+
+](https://churnshield-ng.streamlit.app/)
+[
+
 ![Status](https://img.shields.io/badge/Status-Live-success)
 
 ](https://churnshield-ng.streamlit.app/)
@@ -28,7 +36,7 @@
 ---
 
 ## 🌍 Live Demo
-**[👉 Try Aegis AI Live](https://churnshield-ng.streamlit.app/)**
+**[👉 Try Aegis AI Live — churnshield-ng.streamlit.app](https://churnshield-ng.streamlit.app/)**
 
 ---
 
@@ -37,55 +45,97 @@ Aegis AI is a Nigerian AI platform for decision intelligence. We build AI-powere
 
 **Founded by:** Ajayi Ibrahim Ademola
 **Mission:** Making advanced AI accessible to everyone in Africa and beyond!
+**Tagline:** Predict. Analyze. Protect.
 
 ---
 
-## 🚀 Current Modules
+## 🚀 Live Modules — 6 AI Models
 
 ### 🛡️ ChurnShield — Customer Intelligence
 Predict which customers will leave before they do!
-
-**Features:**
 - Single customer churn prediction
-- Batch prediction — upload CSV of thousands of customers
+- Batch prediction — upload CSV of thousands
 - Customer loyalty check — 8 African countries
 - Business intelligence insights
 - Retention strategy recommendations
-- Visual analytics — charts and graphs
-- Download results as CSV
-
-**Accuracy:** 78.68% | **Dataset:** 7,043 records
+- Visual analytics with charts
+- **Accuracy:** 78.68% | **Dataset:** 7,043 records
 
 ---
 
 ### ❤️ HeartGuard — Health Risk Prediction
 Predict heart disease risk from patient health data!
-
-**Features:**
 - Patient health data analysis
 - Heart disease risk prediction
 - Risk factor identification
 - Health recommendations
 - Medical disclaimer included
-
-**Accuracy:** 86.89% | **Dataset:** Cleveland Heart Disease Dataset
-
----
-
-### 🎓 StudyShield — Student Analytics *(Coming Soon)*
-Predict student performance and dropout risk!
+- **Accuracy:** 86.89% | **Dataset:** Cleveland Heart Disease
 
 ---
 
-### 💰 LoanShield — Financial Risk *(Coming Soon)*
-Predict loan default risk for financial institutions!
+### 🎓 StudyShield — Student Performance Analytics
+Predict student performance and identify at-risk students!
+- Study habit analysis
+- Pass/fail prediction
+- Personalized study tips
+- Attendance impact analysis
+- **Accuracy:** 91.5% | **Dataset:** Synthetic Student Data
 
 ---
 
-## 🌍 Supported Countries
+### 💼 CareerShield — Career Intelligence
+Discover your perfect career path and JAMB guide!
+- Career personality assessment
+- Top 3 career recommendations
+- JAMB subject combinations
+- University recommendations
+- Cut off marks
+- Salary range insights
+- **Powered by:** AI Rule Engine | **Coverage:** 10 Nigerian careers
 
-| Country | Providers Supported |
-|---------|-------------------|
+---
+
+### 📈 ForexSense — Trading Intelligence
+Analyze your forex trading setup using Smart Money Concepts!
+- Setup quality analysis
+- Confirmation score checker
+- Risk/reward validation
+- Session timing analysis
+- Trade/skip recommendation
+- **Accuracy:** 89% | **Based on:** Smart Money Concepts
+
+---
+
+### 😴 HealthCheck — Daily Wellness
+Check your daily health and wellness score!
+- Sleep quality analysis
+- Stress level monitoring
+- Exercise habit tracking
+- Hydration checker
+- Daily health score
+- Personalized health tips
+- **Accuracy:** 90.75% | **Features:** 10 health indicators
+
+---
+
+## 📊 Model Performance Summary
+
+| Module | Algorithm | Accuracy | Dataset |
+|--------|-----------|----------|---------|
+| 🛡️ ChurnShield | Gradient Boosting | 78.68% | 7,043 records |
+| ❤️ HeartGuard | Rule-based AI | 86.89% | 303 records |
+| 🎓 StudyShield | Random Forest | 91.5% | 2,000 records |
+| 💼 CareerShield | AI Rule Engine | AI Powered | 10 careers |
+| 📈 ForexSense | Random Forest | 89% | 2,000 trades |
+| 😴 HealthCheck | Random Forest | 90.75% | 2,000 records |
+
+---
+
+## 🌍 Supported Countries & Providers
+
+| Country | Providers |
+|---------|-----------|
 | 🇳🇬 Nigeria | MTN, Airtel, Glo, 9mobile |
 | 🇬🇭 Ghana | MTN, Vodafone, AirtelTigo |
 | 🇰🇪 Kenya | Safaricom, Airtel, Telkom |
@@ -93,7 +143,7 @@ Predict loan default risk for financial institutions!
 | 🇺🇬 Uganda | MTN, Airtel, Africell |
 | 🇹🇿 Tanzania | Vodacom, Airtel, Tigo, Halotel |
 | 🇷🇼 Rwanda | MTN, Airtel |
-| 🌍 Other African Countries | MTN, Airtel, Vodafone |
+| 🌍 Other African | MTN, Airtel, Vodafone |
 
 ---
 
@@ -105,19 +155,9 @@ Predict loan default risk for financial institutions!
 | Streamlit | Web interface framework |
 | Pandas | Data manipulation |
 | NumPy | Numerical computing |
-| Scikit-learn | Machine learning algorithms |
-| Gradient Boosting | ChurnShield prediction model |
-| SVM | HeartGuard prediction model |
-
----
-
-## 📊 Model Performance
-
-| Module | Algorithm | Accuracy | Dataset Size |
-|--------|-----------|----------|--------------|
-| 🛡️ ChurnShield | Gradient Boosting | 78.68% | 7,043 records |
-| ❤️ HeartGuard | Support Vector Machine | 86.89% | 303 records |
-| 🎓 StudyShield | In Training | TBA | TBA |
+| Scikit-learn | Machine learning |
+| Supabase | Database & Authentication |
+| GitHub | Version control |
 
 ---
 
