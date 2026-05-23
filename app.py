@@ -450,72 +450,84 @@ jamb_combinations = {
 }
 
 # ============================================
-# FOREXSENSE ENGINE
+# FOREXSENSE ENGINE — Ademola's Strategy
 # ============================================
 def predict_forex(market_bias, model_aligned, confirmation_score,
                   liquidity_swept, choch_formed, bos_confirmed,
-                  risk_reward, session, news_event, higher_tf_aligned):
+                  risk_reward, session, news_event, higher_tf_aligned,
+                  trade_type):
     score = 0
     reasons = []
     warnings = []
 
-    if model_aligned == "Yes":
-        score += 30
-        reasons.append("✅ Model is aligned — good sign!")
+    # Core model alignment — ALL THREE must be true
+    if model_aligned == "Yes" and liquidity_swept == "Yes" and choch_formed == "Yes":
+        score += 50
+        reasons.append("✅ Model aligned — Liquidity swept + ChoCH confirmed!")
+    elif model_aligned == "Yes" and liquidity_swept == "Yes":
+        score += 25
+        warnings.append("⚠️ Liquidity swept but ChoCH not formed yet — wait!")
+    elif model_aligned == "Yes":
+        score += 10
+        warnings.append("⚠️ Model aligned but liquidity not swept — not ready!")
     else:
-        score -= 30
-        warnings.append("❌ Model NOT aligned — stay out!")
+        score -= 20
+        warnings.append("❌ Model NOT aligned — stay out completely!")
 
+    # Higher timeframe
     if higher_tf_aligned == "Yes":
         score += 20
         reasons.append("✅ Higher timeframe confirms direction!")
     else:
-        warnings.append("⚠️ Higher timeframe not aligned!")
+        warnings.append("⚠️ Higher timeframe not aligned — risky!")
 
-    if liquidity_swept == "Yes":
-        score += 15
-        reasons.append("✅ Liquidity swept — smart money active!")
-    else:
-        warnings.append("⚠️ No liquidity sweep yet!")
-
-    if choch_formed == "Yes":
-        score += 10
-        reasons.append("✅ Change of Character confirmed!")
-
+    # BOS confirmation
     if bos_confirmed == "Yes":
         score += 10
         reasons.append("✅ Break of Structure confirmed!")
-
-    if confirmation_score >= 7:
-        score += 15
-        reasons.append(f"✅ Strong confirmation: {confirmation_score}/10!")
-    elif confirmation_score >= 5:
-        score += 8
-        reasons.append(f"⚠️ Moderate confirmation: {confirmation_score}/10")
     else:
-        warnings.append(f"❌ Weak confirmation: {confirmation_score}/10!")
+        warnings.append("⚠️ No BOS yet — wait for more confirmation!")
 
+    # Risk Reward — minimum 1RR
     if risk_reward >= 2:
-        score += 10
-        reasons.append(f"✅ Excellent RR: {risk_reward}!")
-    elif risk_reward >= 1.5:
-        score += 5
-        reasons.append(f"✅ Good RR: {risk_reward}")
+        score += 15
+        reasons.append(f"✅ Excellent RR: {risk_reward}:1!")
+    elif risk_reward >= 1:
+        score += 8
+        reasons.append(f"✅ Acceptable RR: {risk_reward}:1")
     else:
-        warnings.append(f"⚠️ Low RR: {risk_reward}!")
+        score -= 20
+        warnings.append(f"❌ RR too low: {risk_reward}:1 — minimum is 1RR!")
 
+    # News event handling
     if news_event == "Yes":
-        score -= 10
-        warnings.append("⚠️ News event active — higher risk!")
+        if trade_type == "Swing Trade":
+            score -= 5
+            warnings.append("⚠️ News event — consider impact on swing trade!")
+        else:
+            score -= 20
+            warnings.append("❌ News event active — avoid intraday trades!")
 
-    if market_bias == "Bullish" and session == "London/NY":
+    # Session
+    if session == "London/NY":
+        score += 10
+        reasons.append("✅ Trading during peak session — higher probability!")
+    elif session == "Asian":
+        score -= 5
+        warnings.append("⚠️ Asian session — lower volatility, be careful!")
+
+    # Confirmation score
+    if confirmation_score >= 8:
+        score += 10
+        reasons.append(f"✅ Strong confirmation: {confirmation_score}/10!")
+    elif confirmation_score >= 6:
         score += 5
-        reasons.append("✅ Bullish bias during peak session!")
-    elif market_bias == "Bearish" and session == "London/NY":
-        score += 5
-        reasons.append("✅ Bearish bias during peak session!")
+        reasons.append(f"✅ Good confirmation: {confirmation_score}/10")
+    else:
+        warnings.append(f"⚠️ Weak confirmation: {confirmation_score}/10 — wait!")
 
     return min(max(score, 0), 100), reasons, warnings
+
 
 # ============================================
 # HEALTHCHECK ENGINE
@@ -626,6 +638,20 @@ def go_to(page):
 # ============================================
 # HOME PAGE
 # ============================================
+st.markdown("""
+    <style>
+    .stButton > button {
+        border-radius: 10px;
+        padding: 10px;
+        font-weight: bold;
+    }
+    .stMetric {
+        background-color: #1a1a2e;
+        padding: 10px;
+        border-radius: 8px;
+    }
+    </style>
+    """, unsafe_allow_html=True)
 def show_home():
     st.image("https://raw.githubusercontent.com/ibrahim399-dev/Churnshield/main/logo-header.png",
              use_column_width=True)
@@ -635,15 +661,13 @@ def show_home():
     st.write("---")
 
     col1, col2, col3, col4 = st.columns(4)
-    col1.metric("📊 Records", "10,000+")
-    col2.metric("🎯 Accuracy", "Up to 91.5%")
+    col1.metric("📊 Records", "13,000+")
+    col2.metric("🎯 Best Accuracy", "91.5%")
     col3.metric("🤖 Models", "6 Live!")
-    col4.metric("🌍 Countries", "8+ African")
+    col4.metric("🌍 Countries", "8 African")
     st.write("---")
 
-    st.info("🔬 **Powered by Machine Learning** | 📊 **Up to 91.5% Accuracy** | 🗄️ **Real World Datasets** | ⚙️ **6 AI Models Live!**")
-    st.write("---")
-
+    st.info("🔬 **Machine Learning Powered** | 📊 **78-91% Accuracy Range** | 🗄️ **Real World Datasets** | ⚙️ **6 Sectors Covered**")
     st.subheader("🚀 Aegis AI Modules — 6 Live!")
     col1, col2, col3 = st.columns(3)
     with col1:
@@ -1320,93 +1344,161 @@ def show_career():
 def show_forex():
     st.title("📈 ForexSense")
     st.write("**An Aegis AI Product** | Trading Intelligence Module")
-    st.info("🔬 Powered by AI | 🎯 89% Accuracy | 📊 Based on Smart Money Concepts")
+    st.info("🔬 Powered by Smart Money Concepts | 🎯 89% Accuracy | 📊 Ademola's Strategy")
     st.write("---")
     st.warning("⚠️ **Disclaimer:** ForexSense is for educational purposes only. Always manage your risk!")
     st.write("---")
 
     st.subheader("📊 Analyze Your Trading Setup")
+    st.write("Based on Smart Money Concepts — Liquidity, ChoCH, BOS!")
     st.write("---")
 
     col1, col2 = st.columns(2)
     with col1:
-        market_bias = st.selectbox("📈 Market Bias", ["Bullish", "Bearish", "Ranging"])
-        model_aligned = st.selectbox("🎯 Is Your Model Aligned?", ["Yes", "No"])
-        confirmation_score = st.slider("✅ Confirmation Score (0-10)", 0, 10, 7)
-        liquidity_swept = st.selectbox("💧 Liquidity Swept?", ["Yes", "No"])
-        choch_formed = st.selectbox("🔄 ChoCH Formed?", ["Yes", "No"])
+        market_bias = st.selectbox("📈 Market Bias",
+                                  ["Bullish", "Bearish", "Ranging"])
+        model_aligned = st.selectbox("🎯 Is Your Model Aligned?",
+                                    ["Yes", "No"],
+                                    help="Model = Liquidity + ChoCH + BOS all confirmed!")
+        liquidity_swept = st.selectbox("💧 Liquidity Swept?",
+                                      ["Yes", "No"],
+                                      help="Has smart money swept liquidity?")
+        choch_formed = st.selectbox("🔄 ChoCH Formed?",
+                                   ["Yes", "No"],
+                                   help="Change of Character confirmed?")
+        bos_confirmed = st.selectbox("📊 BOS Confirmed?",
+                                    ["Yes", "No"],
+                                    help="Break of Structure confirmed?")
+
     with col2:
-        bos_confirmed = st.selectbox("📊 BOS Confirmed?", ["Yes", "No"])
-        risk_reward = st.slider("💰 Risk Reward Ratio", 0.5, 5.0, 2.0, 0.5)
-        session = st.selectbox("⏰ Trading Session", ["London/NY", "Asian", "Off-hours"])
-        news_event = st.selectbox("📰 Active News Event?", ["No", "Yes"])
-        higher_tf_aligned = st.selectbox("📈 Higher TF Aligned?", ["Yes", "No"])
+        higher_tf_aligned = st.selectbox("📈 Higher TF Aligned?",
+                                        ["Yes", "No"],
+                                        help="Is the higher timeframe in your direction?")
+        risk_reward = st.slider("💰 Risk Reward Ratio", 0.5, 5.0, 2.0, 0.5,
+                               help="Minimum 1RR — aim for 2RR+")
+        session = st.selectbox("⏰ Trading Session",
+                              ["London/NY", "Asian", "Off-hours"])
+        news_event = st.selectbox("📰 Active News Event?",
+                                 ["No", "Yes"])
+        trade_type = st.selectbox("📋 Trade Type",
+                                 ["Intraday", "Swing Trade"])
+        confirmation_score = st.slider("✅ Confirmation Score (0-10)", 0, 10, 7,
+                                      help="How many boxes are ticked?")
 
     st.write("---")
-    col1, col2, col3 = st.columns(3)
+
+    # Setup summary
+    st.subheader("📋 Setup Summary")
+    col1, col2, col3, col4 = st.columns(4)
     col1.metric("Bias", market_bias)
-    col2.metric("RR Ratio", f"{risk_reward}:1")
-    col3.metric("Confirmations", f"{confirmation_score}/10")
+    col2.metric("RR", f"{risk_reward}:1")
+    col3.metric("Session", session.split("/")[0])
+    col4.metric("Confirmations", f"{confirmation_score}/10")
+
+    # Core checklist
+    st.write("**Core Checklist:**")
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        if liquidity_swept == "Yes":
+            st.success("✅ Liquidity Swept")
+        else:
+            st.error("❌ Liquidity NOT Swept")
+    with col2:
+        if choch_formed == "Yes":
+            st.success("✅ ChoCH Formed")
+        else:
+            st.error("❌ ChoCH NOT Formed")
+    with col3:
+        if bos_confirmed == "Yes":
+            st.success("✅ BOS Confirmed")
+        else:
+            st.error("❌ BOS NOT Confirmed")
+
+    st.write("---")
 
     if st.button("📈 Analyze My Setup", use_container_width=True):
         with st.spinner("🤖 AI analyzing your trading setup..."):
             score, reasons, warnings = predict_forex(
                 market_bias, model_aligned, confirmation_score,
                 liquidity_swept, choch_formed, bos_confirmed,
-                risk_reward, session, news_event, higher_tf_aligned
+                risk_reward, session, news_event,
+                higher_tf_aligned, trade_type
             )
 
         st.write("---")
-        if score >= 70:
-            st.success(f"## ✅ A+ SETUP — TAKE THE TRADE!\n**Confidence: {score}/100**")
-            verdict = "✅ TAKE TRADE"
-        elif score >= 50:
-            st.info(f"## 🔵 GOOD SETUP — PROCEED WITH CAUTION\n**Confidence: {score}/100**")
-            verdict = "🔵 CONSIDER"
-        elif score >= 30:
-            st.warning(f"## 🟡 WEAK SETUP — WAIT\n**Confidence: {score}/100**")
-            verdict = "🟡 WAIT"
+        if score >= 80:
+            st.success(f"""
+## ✅ A+ SETUP — HIGH PROBABILITY TRADE!
+**Setup Score: {score}/100**
+All boxes ticked — this is the trade you've been waiting for!
+            """)
+            verdict = "✅ TAKE THE TRADE"
+        elif score >= 60:
+            st.info(f"""
+## 🔵 GOOD SETUP — PROCEED WITH CAUTION
+**Setup Score: {score}/100**
+Most criteria met — consider entering!
+            """)
+            verdict = "🔵 CONSIDER ENTERING"
+        elif score >= 40:
+            st.warning(f"""
+## 🟡 INCOMPLETE SETUP — WAIT
+**Setup Score: {score}/100**
+Setup not fully confirmed — be patient!
+            """)
+            verdict = "🟡 WAIT FOR MORE"
         else:
-            st.error(f"## ❌ SKIP THIS TRADE\n**Confidence: {score}/100**")
-            verdict = "❌ SKIP"
+            st.error(f"""
+## ❌ SKIP THIS TRADE — PROTECT YOUR CAPITAL
+**Setup Score: {score}/100**
+Setup does not meet your model criteria!
+            """)
+            verdict = "❌ SKIP — NO SETUP"
 
-        col1, col2 = st.columns(2)
+        col1, col2, col3 = st.columns(3)
         col1.metric("Verdict", verdict)
-        col2.metric("Setup Score", f"{score}/100")
+        col2.metric("Score", f"{score}/100")
+        col3.metric("Min RR Met", "✅ Yes" if risk_reward >= 1 else "❌ No")
         st.progress(score/100)
 
-        st.write("---")
         if reasons:
+            st.write("---")
             st.subheader("✅ Positive Signals")
             for reason in reasons:
                 st.write(f"• {reason}")
 
         if warnings:
+            st.write("---")
             st.subheader("⚠️ Warning Signals")
             for warning in warnings:
                 st.write(f"• {warning}")
 
         st.write("---")
         st.subheader("💡 Trading Advice")
-        if score >= 70:
-            st.write("• 🎯 Enter with confidence — setup is strong!")
-            st.write("• 💰 Stick to your planned RR ratio!")
-            st.write("• 🛑 Set stop loss BEFORE entering!")
-            st.write("• 📱 Don't move stop loss too early!")
-        elif score >= 50:
-            st.write("• 👀 Wait for one more confirmation!")
-            st.write("• 💰 Consider reducing position size!")
+        if score >= 80:
+            st.write("• 🎯 This is an A+ setup — enter with confidence!")
+            st.write("• 💰 Stick to your planned RR — don't move targets!")
+            st.write(f"• 🛑 Set SL before entering — target {risk_reward}R minimum!")
+            st.write("• 📱 Walk away after entering — let the trade work!")
+            st.write("• 🧘 Stay calm — you followed your model perfectly!")
+        elif score >= 60:
+            st.write("• 👀 Wait for one final confirmation before entering!")
+            st.write("• 💰 Consider reducing position size slightly!")
             st.write("• 🛑 Keep stop loss tight!")
+            st.write("• 📊 Make sure higher TF is aligned!")
         else:
-            st.write("• ❌ Stay out — protect your capital!")
-            st.write("• 👀 Wait for next setup!")
-            st.write("• 📚 Review your trading plan!")
+            st.write("• ❌ Stay out — this setup doesn't meet your criteria!")
+            st.write("• 👀 Wait for next high probability setup!")
+            st.write("• 📚 Review your model — patience is profit!")
+            st.write("• 💪 Missing a trade is better than a bad trade!")
 
-        st.warning("⚠️ The market rewards discipline — not who trades the most! 😂")
+        st.write("---")
+        st.warning("⚠️ Remember: **The market rewards discipline and consistency — not who trades the most!** 😂")
 
     st.write("---")
     if st.button("← Back to Models", use_container_width=True):
         go_to("models")
+
 
 # ============================================
 # HEALTHCHECK PAGE
