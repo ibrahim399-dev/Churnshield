@@ -103,13 +103,17 @@ def predict_churn(tenure, monthly_charges, senior_citizen, contract, internet_se
     return risk_score, reasons, positive_factors, business_insights
 
 # ============================================
-# HEARTGUARD ENGINE
+# HEARTGUARD ENGINE — Plain Language Version
 # ============================================
-def predict_heart(age, sex, cp, trestbps, chol, fbs, thalach, exang, oldpeak):
+def predict_heart(age, sex, chest_pain_exercise, chest_pain_type,
+                  blood_pressure_level, cholesterol_level, 
+                  blood_sugar_high, max_heart_rate, 
+                  exercise_causes_pain, stress_test_result):
     risk_score = 0
     risk_factors = []
     positive_factors = []
 
+    # Age
     if age > 60:
         risk_score += 25
         risk_factors.append("👤 Age above 60 — significantly higher cardiac risk!")
@@ -122,79 +126,107 @@ def predict_heart(age, sex, cp, trestbps, chol, fbs, thalach, exang, oldpeak):
     else:
         positive_factors.append("👤 Young age — lower baseline cardiac risk!")
 
-    if trestbps > 160:
-        risk_score += 20
-        risk_factors.append("🩺 Very high blood pressure — serious risk factor!")
-    elif trestbps > 140:
-        risk_score += 12
-        risk_factors.append("🩺 High blood pressure detected!")
-    elif trestbps > 120:
-        risk_score += 5
-        risk_factors.append("🩺 Slightly elevated blood pressure!")
-    else:
-        positive_factors.append("🩺 Normal blood pressure!")
-
-    if chol > 300:
-        risk_score += 20
-        risk_factors.append("🧪 Very high cholesterol — major risk factor!")
-    elif chol > 240:
-        risk_score += 12
-        risk_factors.append("🧪 High cholesterol detected!")
-    elif chol > 200:
-        risk_score += 5
-        risk_factors.append("🧪 Borderline cholesterol levels!")
-    else:
-        positive_factors.append("🧪 Healthy cholesterol levels!")
-
-    if cp == 3:
-        risk_score += 15
-        risk_factors.append("💔 Asymptomatic chest pain — high risk!")
-    elif cp == 2:
-        risk_score += 8
-        risk_factors.append("💔 Non-anginal chest pain detected!")
-    elif cp == 1:
-        risk_score += 5
-        risk_factors.append("💔 Atypical angina present!")
-    else:
-        positive_factors.append("💔 Typical angina — manageable!")
-
-    if thalach < 100:
-        risk_score += 15
-        risk_factors.append("💓 Very low maximum heart rate!")
-    elif thalach < 130:
-        risk_score += 8
-        risk_factors.append("💓 Below average maximum heart rate!")
-    else:
-        positive_factors.append("💓 Good maximum heart rate!")
-
-    if exang == "Yes":
-        risk_score += 12
-        risk_factors.append("🏃 Exercise induced chest pain!")
-    else:
-        positive_factors.append("🏃 No exercise induced chest pain!")
-
-    if oldpeak > 3:
-        risk_score += 15
-        risk_factors.append("📉 High ST depression!")
-    elif oldpeak > 1.5:
-        risk_score += 8
-        risk_factors.append("📉 Moderate ST depression!")
-    else:
-        positive_factors.append("📉 Normal ST depression!")
-
-    if fbs == "Yes":
-        risk_score += 5
-        risk_factors.append("🍬 High fasting blood sugar!")
-    else:
-        positive_factors.append("🍬 Normal fasting blood sugar!")
-
+    # Sex
     if sex == "Male":
         risk_score += 5
         risk_factors.append("⚤ Male — statistically higher cardiac risk!")
     else:
         positive_factors.append("⚤ Female — lower baseline cardiac risk!")
 
+    # Chest pain during exercise
+    if chest_pain_exercise == "Yes — severe pain":
+        risk_score += 25
+        risk_factors.append("💔 Severe chest pain during exercise — high risk indicator!")
+    elif chest_pain_exercise == "Yes — mild discomfort":
+        risk_score += 12
+        risk_factors.append("💔 Mild chest discomfort during exercise detected!")
+    elif chest_pain_exercise == "Rarely":
+        risk_score += 5
+        risk_factors.append("💔 Occasional chest discomfort noted!")
+    else:
+        positive_factors.append("💔 No chest pain during exercise — good sign!")
+
+    # Chest pain type
+    if chest_pain_type == "No pain at all":
+        risk_score += 15
+        risk_factors.append("💔 Asymptomatic — no pain despite potential risk!")
+    elif chest_pain_type == "Sharp stabbing pain":
+        risk_score += 8
+        risk_factors.append("💔 Non-anginal chest pain detected!")
+    elif chest_pain_type == "Pressure or squeezing":
+        risk_score += 5
+        risk_factors.append("💔 Atypical angina present!")
+    else:
+        positive_factors.append("💔 Typical angina — manageable chest pain!")
+
+    # Blood pressure
+    if blood_pressure_level == "Very High (160+)":
+        risk_score += 20
+        risk_factors.append("🩺 Very high blood pressure — serious risk factor!")
+    elif blood_pressure_level == "High (140-160)":
+        risk_score += 12
+        risk_factors.append("🩺 High blood pressure detected!")
+    elif blood_pressure_level == "Slightly High (120-140)":
+        risk_score += 5
+        risk_factors.append("🩺 Slightly elevated blood pressure!")
+    else:
+        positive_factors.append("🩺 Normal blood pressure — great!")
+
+    # Cholesterol
+    if cholesterol_level == "Very High (300+)":
+        risk_score += 20
+        risk_factors.append("🧪 Very high cholesterol — major risk factor!")
+    elif cholesterol_level == "High (240-300)":
+        risk_score += 12
+        risk_factors.append("🧪 High cholesterol detected!")
+    elif cholesterol_level == "Borderline (200-240)":
+        risk_score += 5
+        risk_factors.append("🧪 Borderline cholesterol levels!")
+    else:
+        positive_factors.append("🧪 Healthy cholesterol levels!")
+
+    # Blood sugar
+    if blood_sugar_high == "Yes":
+        risk_score += 10
+        risk_factors.append("🍬 High fasting blood sugar — diabetes risk!")
+    else:
+        positive_factors.append("🍬 Normal fasting blood sugar!")
+
+    # Max heart rate
+    if max_heart_rate == "Very Low — I get tired very quickly":
+        risk_score += 15
+        risk_factors.append("💓 Very low exercise capacity — concerning!")
+    elif max_heart_rate == "Below Average — I tire faster than most":
+        risk_score += 8
+        risk_factors.append("💓 Below average exercise capacity!")
+    else:
+        positive_factors.append("💓 Good exercise capacity!")
+
+    # Exercise causes pain
+    if exercise_causes_pain == "Yes — always":
+        risk_score += 15
+        risk_factors.append("🏃 Exercise consistently causes chest pain!")
+    elif exercise_causes_pain == "Sometimes":
+        risk_score += 8
+        risk_factors.append("🏃 Exercise occasionally causes discomfort!")
+    else:
+        positive_factors.append("🏃 No exercise induced chest pain!")
+
+    # Stress test
+    if stress_test_result == "Abnormal — doctor found issues":
+        risk_score += 15
+        risk_factors.append("📉 Abnormal stress test result — significant risk!")
+    elif stress_test_result == "Borderline — some concerns":
+        risk_score += 8
+        risk_factors.append("📉 Borderline stress test results!")
+    elif stress_test_result == "Never had one":
+        risk_score += 3
+        risk_factors.append("📉 No stress test history — consider getting one!")
+    else:
+        positive_factors.append("📉 Normal stress test result!")
+
     return min(risk_score, 100), risk_factors, positive_factors
+
 
 # ============================================
 # STUDYSHIELD ENGINE
@@ -1065,7 +1097,7 @@ def show_churn():
         go_to("models")
 
 # ============================================
-# HEARTGUARD PAGE
+# HEARTGUARD PAGE — Plain Language Version
 # ============================================
 def show_heart():
     st.title("❤️ HeartGuard")
@@ -1075,71 +1107,180 @@ def show_heart():
     st.warning("⚠️ **Medical Disclaimer:** HeartGuard is for awareness only. Always consult a qualified doctor!")
     st.write("---")
 
-    if st.button("📊 Try Demo Data — High Risk Patient", use_container_width=True):
+    st.subheader("🏥 Answer These Simple Questions")
+    st.write("No medical knowledge needed — just answer honestly!")
+    st.write("---")
+
+    # Demo button
+    if st.button("📊 Try Demo — High Risk Profile", use_container_width=True):
         st.session_state.heart_demo = True
 
     if st.session_state.heart_demo:
-        d_age, d_sex = 63, "Male"
-        d_cp, d_trestbps, d_chol = 3, 145, 233
-        d_fbs, d_thalach = "Yes", 150
-        d_exang, d_oldpeak = "Yes", 2.3
-        st.info("✅ Demo loaded!")
-    else:
-        d_age, d_sex = 45, "Male"
-        d_cp, d_trestbps, d_chol = 0, 120, 200
-        d_fbs, d_thalach = "No", 160
-        d_exang, d_oldpeak = "No", 1.0
-
-    col1, col2 = st.columns(2)
-    with col1:
-        age = st.slider("👤 Age", 20, 80, d_age)
-        sex = st.selectbox("⚤ Sex", ["Male", "Female"],
-                          index=0 if d_sex == "Male" else 1)
-        cp = st.selectbox("💔 Chest Pain Type", [
-            "0 — Typical Angina", "1 — Atypical Angina",
-            "2 — Non-anginal Pain", "3 — Asymptomatic"
-        ], index=d_cp)
-        trestbps = st.slider("🩺 Blood Pressure (mmHg)", 80, 200, d_trestbps)
-        chol = st.slider("🧪 Cholesterol (mg/dl)", 100, 600, d_chol)
-    with col2:
-        fbs = st.selectbox("🍬 Fasting Blood Sugar > 120?", ["No", "Yes"],
-                          index=0 if d_fbs == "No" else 1)
-        thalach = st.slider("💓 Max Heart Rate", 60, 220, d_thalach)
-        exang = st.selectbox("🏃 Exercise Angina?", ["No", "Yes"],
-                            index=0 if d_exang == "No" else 1)
-        oldpeak = st.slider("📉 ST Depression", 0.0, 7.0, d_oldpeak, 0.1)
+        st.info("✅ Demo loaded — high risk patient profile!")
 
     st.write("---")
-    col1, col2, col3, col4 = st.columns(4)
+
+    # Section 1 — Basic Info
+    st.subheader("👤 Basic Information")
+    col1, col2 = st.columns(2)
+    with col1:
+        age = st.slider("How old are you?", 20, 80,
+                       63 if st.session_state.heart_demo else 45)
+    with col2:
+        sex = st.selectbox("What is your sex?",
+                          ["Male", "Female"])
+
+    st.write("---")
+
+    # Section 2 — Chest Pain
+    st.subheader("💔 Chest Pain & Discomfort")
+    st.write("*These questions help us understand if your heart is under stress*")
+
+    chest_pain_exercise = st.selectbox(
+        "Do you experience chest pain or discomfort during physical activity?",
+        ["No — I feel fine during exercise",
+         "Rarely",
+         "Yes — mild discomfort",
+         "Yes — severe pain"],
+        index=3 if st.session_state.heart_demo else 0,
+        help="Think about walking fast, climbing stairs, or any physical effort"
+    )
+
+    chest_pain_type = st.selectbox(
+        "If you experience chest pain, how would you describe it?",
+        ["I don't experience chest pain",
+         "Pressure or squeezing feeling",
+         "Sharp stabbing pain",
+         "No pain at all — even during heavy exercise"],
+        index=0 if not st.session_state.heart_demo else 3,
+        help="Choose the description that best matches your experience"
+    )
+
+    exercise_causes_pain = st.selectbox(
+        "Does physical activity or exercise cause chest discomfort?",
+        ["No — exercise feels normal",
+         "Sometimes",
+         "Yes — always"],
+        index=2 if st.session_state.heart_demo else 0,
+        help="Think about your last few weeks of physical activity"
+    )
+
+    st.write("---")
+
+    # Section 3 — Blood Pressure & Cholesterol
+    st.subheader("🩺 Blood Pressure & Cholesterol")
+    st.write("*Check your last medical report or estimate based on doctor visits*")
+
+    blood_pressure_level = st.selectbox(
+        "What is your blood pressure level?",
+        ["Normal (below 120)",
+         "Slightly High (120-140)",
+         "High (140-160)",
+         "Very High (160+)",
+         "I don't know"],
+        index=1 if st.session_state.heart_demo else 0,
+        help="You can find this from your last doctor visit or pharmacy check"
+    )
+
+    cholesterol_level = st.selectbox(
+        "What is your cholesterol level?",
+        ["Healthy (below 200)",
+         "Borderline (200-240)",
+         "High (240-300)",
+         "Very High (300+)",
+         "I don't know"],
+        index=1 if st.session_state.heart_demo else 0,
+        help="Check your last blood test result"
+    )
+
+    blood_sugar_high = st.selectbox(
+        "Has a doctor ever told you that your blood sugar is high?",
+        ["No", "Yes"],
+        index=1 if st.session_state.heart_demo else 0,
+        help="High fasting blood sugar can indicate diabetes which affects heart health"
+    )
+
+    st.write("---")
+
+    # Section 4 — Exercise Capacity
+    st.subheader("🏃 Exercise & Energy Levels")
+    st.write("*These questions reveal how well your heart handles physical stress*")
+
+    max_heart_rate = st.selectbox(
+        "How would you describe your exercise capacity?",
+        ["Good — I can exercise for long periods",
+         "Below Average — I tire faster than most",
+         "Very Low — I get tired very quickly"],
+        index=2 if st.session_state.heart_demo else 0,
+        help="Compare yourself to others your age"
+    )
+
+    st.write("---")
+
+    # Section 5 — Medical History
+    st.subheader("🏥 Medical History")
+    st.write("*Previous medical results help us give more accurate predictions*")
+
+    stress_test_result = st.selectbox(
+        "Have you ever had a cardiac stress test? If yes, what was the result?",
+        ["Never had one",
+         "Normal — doctor said everything was fine",
+         "Borderline — some concerns raised",
+         "Abnormal — doctor found issues"],
+        index=3 if st.session_state.heart_demo else 0,
+        help="A cardiac stress test measures how your heart performs under physical stress"
+    )
+
+    st.write("---")
+
+    # Patient Summary
+    st.subheader("👤 Your Profile Summary")
+    col1, col2, col3 = st.columns(3)
     col1.metric("Age", f"{age} yrs")
     col2.metric("Sex", sex)
-    col3.metric("Blood Pressure", f"{trestbps} mmHg")
-    col4.metric("Cholesterol", f"{chol} mg/dl")
+    col3.metric("Blood Pressure", blood_pressure_level.split("(")[0])
 
-    if st.button("❤️ Predict Heart Disease Risk", use_container_width=True):
-        with st.spinner("🤖 Analyzing health data..."):
-            cp_val = int(cp.split("—")[0].strip())
+    if st.button("❤️ Predict My Heart Disease Risk", use_container_width=True):
+        with st.spinner("🤖 AI is analyzing your health data..."):
             score, risk_factors, positives = predict_heart(
-                age, sex, cp_val, trestbps, chol,
-                fbs, thalach, exang, oldpeak
+                age, sex, chest_pain_exercise, chest_pain_type,
+                blood_pressure_level, cholesterol_level,
+                blood_sugar_high, max_heart_rate,
+                exercise_causes_pain, stress_test_result
             )
 
         st.write("---")
         if score >= 60:
-            st.error(f"## ⚠️ HEART DISEASE RISK DETECTED!\n**Risk Score: {score}/100**")
-            action = "🚨 Seek immediate medical attention!"
+            st.error(f"""
+## ⚠️ HIGH HEART DISEASE RISK DETECTED!
+**Risk Score: {score}/100**
+Our AI has detected significant indicators of heart disease risk!
+            """)
+            action = "🚨 Please consult a cardiologist as soon as possible!"
             risk_label = "🔴 HIGH RISK"
         elif score >= 40:
-            st.warning(f"## 🟡 MODERATE RISK\n**Risk Score: {score}/100**")
-            action = "⚠️ Schedule doctor appointment soon!"
+            st.warning(f"""
+## 🟡 MODERATE HEART DISEASE RISK
+**Risk Score: {score}/100**
+Some concerning indicators detected — don't ignore these!
+            """)
+            action = "⚠️ Schedule a doctor appointment within 2 weeks!"
             risk_label = "🟡 MODERATE RISK"
         elif score >= 20:
-            st.info(f"## 🔵 LOW-MODERATE RISK\n**Risk Score: {score}/100**")
-            action = "👀 Monitor health regularly!"
+            st.info(f"""
+## 🔵 LOW-MODERATE RISK
+**Risk Score: {score}/100**
+Some minor risk factors present — worth monitoring!
+            """)
+            action = "👀 Monitor your health regularly and maintain healthy lifestyle!"
             risk_label = "🔵 LOW-MODERATE"
         else:
-            st.success(f"## ✅ LOW RISK\n**Safety Score: {100-score}/100**")
-            action = "😊 Maintain healthy lifestyle!"
+            st.success(f"""
+## ✅ LOW HEART DISEASE RISK
+**Safety Score: {100-score}/100**
+No significant indicators detected — keep it up!
+            """)
+            action = "😊 Maintain your healthy lifestyle!"
             risk_label = "✅ LOW RISK"
 
         col1, col2 = st.columns(2)
@@ -1148,30 +1289,47 @@ def show_heart():
         st.progress(score/100)
 
         st.write("---")
+        st.subheader("🔍 What We Found")
         if risk_factors:
             st.write("**⚠️ Risk indicators:**")
             for factor in risk_factors:
                 st.write(f"• {factor}")
         if positives:
-            st.write("**✅ Positive indicators:**")
+            st.write("**✅ Positive signs:**")
             for positive in positives:
                 st.write(f"• {positive}")
 
         st.write("---")
-        st.subheader("💊 Recommendations")
+        st.subheader("💊 What You Should Do")
         st.write(f"**{action}**")
-        if score >= 60:
-            st.write("• 🏥 Visit cardiologist immediately")
-            st.write("• 💊 Get full cardiac workup")
-            st.write("• 🚫 Avoid strenuous exercise")
-            st.write("• 🥗 Start heart-healthy diet")
-        else:
-            st.write("• 🏃 Exercise 30 mins daily")
-            st.write("• 🥗 Eat balanced diet")
-            st.write("• 🚭 Avoid smoking")
-            st.write("• 🏥 Annual checkup recommended")
 
-        st.warning("⚠️ Always consult a qualified medical professional!")
+        if score >= 60:
+            st.write("• 🏥 Visit a cardiologist immediately")
+            st.write("• 💊 Request a full cardiac workup")
+            st.write("• 🚫 Avoid strenuous exercise until cleared by doctor")
+            st.write("• 🥗 Start heart-healthy diet immediately")
+            st.write("• 🚭 Stop smoking if you smoke")
+            st.write("• 💊 Discuss medication options with your doctor")
+        elif score >= 40:
+            st.write("• 🏥 Schedule cardiac checkup within 2 weeks")
+            st.write("• 💊 Discuss medication options with doctor")
+            st.write("• 🏃 Light exercise only — no strenuous activity")
+            st.write("• 🥗 Reduce salt, fat and processed foods")
+            st.write("• 📊 Monitor blood pressure weekly")
+        elif score >= 20:
+            st.write("• 🏃 Exercise regularly — 30 mins daily")
+            st.write("• 🥗 Eat a balanced heart-healthy diet")
+            st.write("• 🚭 Avoid smoking and limit alcohol")
+            st.write("• 📊 Check blood pressure monthly")
+            st.write("• 🏥 Annual cardiac checkup recommended")
+        else:
+            st.write("• 🏃 Keep exercising regularly!")
+            st.write("• 🥗 Maintain your healthy diet!")
+            st.write("• 🏥 Annual checkup still recommended!")
+            st.write("• 😊 You're doing great — keep it up!")
+
+        st.write("---")
+        st.warning("⚠️ **Remember:** This is an AI awareness tool only. Always consult a qualified medical professional for proper diagnosis!")
 
     st.write("---")
     if st.button("← Back to Models", use_container_width=True):
